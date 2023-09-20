@@ -24,11 +24,11 @@
 
         <p><label for="archivo">Incluir mi foto:</label> <input type="file" id="archivo" name="archivo" accept="image/*" /></p>
 
-        <p>Nacido en: 
-            <select name="nacido">
+        <p><label for="nacido">Nacido en: </label>
+            <select id="nacido" name="nacido">
                 <option>Málaga</option>
                 <option>Sevilla</option>
-                <option>Granada</option>
+                <option selected>Granada</option>
             </select>
         </p>
 
@@ -36,7 +36,7 @@
             <textarea id="comentario" name="comentarios"></textarea>
         </p>
 
-        <p><input type="checkbox" name="subscripcion" id="sub"/> <label for="sub">Subscribirse al boletín de Novedades</label></p>
+        <p><input type="checkbox" name="subscripcion" id="sub" checked/> <label for="sub">Subscribirse al boletín de Novedades</label></p>
 
         <input type="submit" name="btnEnviar" value="Guardar Cambios"/> <input type="reset" name="btnReset" value="Borrar los datos introducidos"/>
     </form>
