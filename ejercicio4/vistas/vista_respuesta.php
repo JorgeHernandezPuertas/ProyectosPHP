@@ -11,8 +11,13 @@
             echo "<p><strong>El nombre enviado ha sido: </strong>".$_POST["nombre"]."</p>";
             echo "<p><strong>Ha nacido en: </strong>".$_POST["nacido"]."</p>";
             echo "<p><strong>El sexo es: </strong>".$_POST["sexo"]."</p>";
-            if (isset($_POST["aficiones"])){
+            if (isset($_POST["aficiones"]) && count($_POST["aficiones"]) == 1){
                 echo "<p><strong>La afición seleccionada ha sido:</strong></p>";
+                echo "<ol>";
+                echo "<li>".$_POST["aficiones"][0]."</li>";
+                echo "</ol>";
+            } else if (isset($_POST["aficiones"]) && count($_POST["aficiones"]) > 1) {
+                echo "<p><strong>Las aficiones seleccionadas han sido:</strong></p>";
                 echo "<ol>";
                 foreach ($_POST["aficiones"] as $key) {
                     echo "<li>$key</li>";
