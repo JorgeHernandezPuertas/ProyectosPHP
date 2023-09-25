@@ -69,7 +69,7 @@
 
             <p><input type="checkbox" name="subscripcion" id="sub" checked/> <label for="sub">Subscribirse al boletín de Novedades</label></p>
 
-            <input type="submit" name="btnEnviar" value="Guardar Cambios"/> <input type="reset" name="btnReset" value="Borrar los datos introducidos"/>
+            <input type="submit" name="btnEnviar" value="Guardar Cambios"/> <input type="submit" name="btnBorrar" value="Borrar los datos introducidos"/>
         </form>
     </body>
     </html>

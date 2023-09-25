@@ -1,4 +1,11 @@
 <?php
+    if (isset($_POST["btnBorrar"])){
+        unset($_POST); // El unset() elimina la variable que le pongas (Esta opción es mejor)
+        // Otra forma es:
+        // header("Location: index.php")
+        // exit;
+    }
+
     $error_form = false;
 
     if (isset($_POST["btnEnviar"])){ // Compruebo errores
