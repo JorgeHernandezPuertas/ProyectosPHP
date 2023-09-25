@@ -12,7 +12,12 @@
             echo "<p><strong>Ha nacido en: </strong>".$_POST["nacido"]."</p>";
             echo "<p><strong>El sexo es: </strong>".$_POST["sexo"]."</p>";
             if (isset($_POST["aficiones"])){
-                echo "<p><strong>Tiene aficiones</strong></p>";
+                echo "<p><strong>La afición seleccionada ha sido:</strong></p>";
+                echo "<ol>";
+                foreach ($_POST["aficiones"] as $key) {
+                    echo "<li>$key</li>";
+                }
+                echo "</ol>";
             } else {
                 echo "<p><strong>No has seleccionado ninguna afición</strong></p>";
             }

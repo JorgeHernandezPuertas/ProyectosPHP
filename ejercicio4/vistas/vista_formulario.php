@@ -1,3 +1,17 @@
+<?php
+    function en_array($valor, $arr){
+        $esta = false;
+        foreach($arr as $aux){
+            if ($aux == $valor){
+                $esta = true;
+                break;
+            }
+        }
+        return $esta;
+    }
+?>
+
+
 <!DOCTYPE html>
     <html lang="es">
     <head>
@@ -29,18 +43,18 @@
             <label for="mujer">Mujer</label><input type="radio" id="mujer" name="sexo" value="mujer" <?php if (isset($_POST["sexo"]) && $_POST["sexo"] == "mujer"){echo "checked";} ?> /> 
             <?php
                 if (isset($_POST["btnEnviar"]) && $error_sexo){ // El orden importa para el error
-                    echo "<span class='error'> *Campo obligatorio* </span>";
+                    echo "<span> *Campo obligatorio* </span>";
                 }
             ?>
 
         <p>
             <label>Aficiones: </label>
             <label for="deportes">Deportes</label>
-            <input type="checkbox" name="aficiones" id="deportes" value="deportes" /> 
+            <input type="checkbox" name="aficiones[]" id="deportes" value="Deportes" <?php if (isset($_POST["aficiones"]) && en_array("Deportes", $_POST["aficiones"])){ echo "checked";} ?> /> 
             <label for="lectura">Lectura</label>
-            <input type="checkbox" name="aficiones" id="lectura" value="lectura"/> 
+            <input type="checkbox" name="aficiones[]" id="lectura" value="Lectura" <?php if (isset($_POST["aficiones"]) && en_array("Lectura", $_POST["aficiones"])){ echo "checked";} ?>/> 
             <label for="otros">Otros</label>
-            <input type="checkbox" name="aficiones" id="otros" value="otros"/> 
+            <input type="checkbox" name="aficiones[]" id="otros" value="Otros" <?php if (isset($_POST["aficiones"]) && en_array("Otros", $_POST["aficiones"])){ echo "checked";} ?>/> 
         </p>
 
             <p><label for="comentario">Comentarios:</label>
