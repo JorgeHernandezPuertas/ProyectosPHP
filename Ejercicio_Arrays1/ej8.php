@@ -8,11 +8,11 @@
 <body>
     <?php
         $nombres = array("Pedro", "Ismael", "Sonia", "Clara", "Susana", "Alfonso", "Teresa");
-        echo "<p>El array contiene ".count($nombres)." elementos</p><ol>";
+        echo "<p>El array contiene ".count($nombres)." elementos</p><ul>";
         foreach($nombres as $v){
             echo "<li>$v</li>";
         }
-        echo "</ol>";
+        echo "</ul>";
     ?>
 </body>
 </html>
