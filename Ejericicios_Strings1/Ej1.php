@@ -20,7 +20,7 @@
         $errorPalabra2 = $str2 == "";
         $palabra1Corta = strlen($str1) < 3;
         $palabra2Corta = strlen($str2) < 3;
-        $filtroPasado =  !($errorPalabra1 && $errorPalabra2 && $palabra1Corta && $palabra2Corta);
+        $filtroPasado =  !($errorPalabra1 || $errorPalabra2 || $palabra1Corta || $palabra2Corta);
         }
     ?>
 
