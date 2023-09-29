@@ -18,8 +18,9 @@
         $str2 = strtolower(trim($_POST["p2"]));
         $errorPalabra1 = $str1 == "";
         $errorPalabra2 = $str2 == "";
-        $palabra1Corta = strlen($str1) > 3;
-        $palabra2Corta = strlen($str2) > 3;
+        $palabra1Corta = strlen($str1) < 3;
+        $palabra2Corta = strlen($str2) < 3;
+        $filtroPasado =  !($errorPalabra1 && $errorPalabra2 && $palabra1Corta && $palabra2Corta);
         }
     ?>
 
@@ -29,10 +30,24 @@
     <form action="Ej1.php" method="post" enctype="multipart/form-data">
     <p>Dime dos palabras y te diré si riman o no.</p>
     <p>
-        <label for="p1">Primera palabra: </label> <input type="text" name="p1" id="p1" value="<?php if ($enviado){echo $str1;} ?>" />
+        <label for="p1">Primera palabra: </label> <input type="text" name="p1" id="p1" value="<?php if ($enviado){echo $_POST["p1"];} ?>" />
+        <?php
+            if ($enviado && $errorPalabra1){
+                echo "<span>* Campo vacío *</span>";
+            } else if ($enviado && $palabra1Corta) {
+                echo "<span>* La palabra tiene que tener más de 2 caracteres *</span>";
+            }
+        ?>
     </p>
     <p>
-        <label for="p2">Segunda palabra: </label> <input type="text" name="p2" id="p2" />
+        <label for="p2">Segunda palabra: </label> <input type="text" name="p2" id="p2" value="<?php if ($enviado){echo $_POST["p2"];} ?>" />
+        <?php
+            if ($enviado && $errorPalabra2){
+                echo "<span>* Campo vacío *</span>";
+            } else if ($enviado && $palabra2Corta) {
+                echo "<span>* La palabra tiene que tener más de 2 caracteres *</span>";
+            }
+        ?>
     </p>
     
     <p><input type="submit" value="Comparar" name="btnEnviar" /></p>
@@ -41,16 +56,16 @@
     
     
     <?php
-        if (isset($_POST["btnEnviar"])){
+        if ($enviado && $filtroPasado){
             ?>
             <div id="cajaRes">
             <h2>Ripios - Resultado</h2>
             <?php
                 if ($_POST["p1"] == "" || $_POST["p2"] == ""){
                     echo "<p>No has puesto dos palabras.</p>";
-                } else if (strtoupper(substr(trim($_POST["p1"]), -3)) == strtoupper(substr(trim($_POST["p2"]), -3))){
+                } else if (substr($str1, -3) == substr($str2, -3)){
                     echo "<p>".$_POST["p1"]." y ".$_POST["p2"]." riman.</p>";
-                } else if (strtoupper(substr(trim($_POST["p1"]), -2)) == strtoupper(substr(trim($_POST["p2"]), -2))){
+                } else if (substr($str1, -2) == substr($str2, -2)){
                     echo "<p>".$_POST["p1"]." y ".$_POST["p2"]." riman un poquito.</p>";
                 } else {
                     echo "<p>".$_POST["p1"]." y ".$_POST["p2"]." no riman.</p>";
