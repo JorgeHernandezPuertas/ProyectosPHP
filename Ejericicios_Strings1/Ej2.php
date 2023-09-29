@@ -11,12 +11,28 @@
     </style>
 </head>
 <body>
+    <?php
+    $enviado = isset($_POST["btnEnviar"]);
+    if ($enviado){
+        $envTratado = strtolower(trim($_POST["p1"]));
+        $errorNada = $envTratado == "";
+    }
+        
+    ?>
+
+
+
     <div id="cajaForm">
     <h2>Palíndromos / capícuas - Formulario</h2>
     <form action="Ej2.php" method="post" enctype="multipart/form-data">
     <p>Dime una palabra o un número y te diré si es un palíndromo o un número capicúa.</p>
     <p>
-        <label for="p1">Palabra o número: </label> <input type="text" name="p1" id="p1" />
+        <label for="p1">Palabra o número: </label> <input type="text" name="p1" id="p1" value="<?php if ($enviado) echo $_POST["p1"] ?>" />
+        <?php
+            if ($enviado && $errorNada){
+                echo "<span>* Campo Obligatorio *</span>";
+            }
+        ?>
     </p>
     
     <p><input type="submit" value="Comprobar" name="btnEnviar" /></p>
@@ -25,18 +41,33 @@
     
     
     <?php
-        if (isset($_POST["btnEnviar"])){
+        if ($enviado && !$errorNada){
             ?>
             <div id="cajaRes1">
             <h2>Palíndromos / capícuas - Resultado</h2>
             <?php
-                $str = trim($_POST["p1"]);
-                if ($_POST["p1"] == ""){
-                    echo "<p>No has puesto nada.</p>";
-                } else if (substr($_POST["p1"], 0, floor((strlen($_POST["p1"]) - 1) / 2)) == substr($_POST["p1"], -floor((strlen($_POST["p1"]) - 1) / 2))){
-                    echo "<p>".$_POST["p1"]." es un palíndromo.</p>";
+                // Miro si es palindromo
+                $esPalindromo = true;
+                for ($i=0; $i < intdiv(strlen($envTratado), 2); $i++) { 
+                    if ($envTratado[$i] != $envTratado[strlen($envTratado) - ($i + 1)]){
+                        $esPalindromo = false;
+                        break;
+                    }
+                }
+
+                // Enseño el div que corresponda en función de lo que sea
+                if ($esPalindromo){
+                    if (is_numeric($envTratado)){
+                        echo "<p>".$_POST["p1"]." es capícua.</p>";
+                    } else {
+                        echo "<p>".$_POST["p1"]." es un palíndromo.</p>";
+                    }
                 } else {
-                    echo "<p>".$_POST["p1"]." no es un palíndromo.</p>";
+                    if (is_numeric($envTratado)){
+                        echo "<p>".$_POST["p1"]." no es capícua.</p>";
+                    } else {
+                        echo "<p>".$_POST["p1"]." no es un palíndromo.</p>";
+                    }
                 }
             ?>
             </div>
