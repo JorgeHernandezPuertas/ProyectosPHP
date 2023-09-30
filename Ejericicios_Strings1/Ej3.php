@@ -25,7 +25,7 @@
 
 
     <div id="cajaForm">
-    <h2>Palíndromos / capícuas - Formulario</h2>
+    <h2>Frases palíndromas - Formulario</h2>
     <form action="Ej3.php" method="post" enctype="multipart/form-data">
     <p>Dime una frase y te diré si es una frase palíndroma.</p>
     <p>
