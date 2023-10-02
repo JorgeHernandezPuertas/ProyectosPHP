@@ -16,6 +16,8 @@
     if ($enviado){
         $envTratado = strtolower(trim($_POST["p1"]));
         $errorNada = $envTratado == "";
+        $errorCorto = strlen($envTratado) > 2;
+        $noErrores = !($errorNada || $errorCorto);
     }
         
     ?>
@@ -31,6 +33,8 @@
         <?php
             if ($enviado && $errorNada){
                 echo "<span>* Campo Obligatorio *</span>";
+            } else if ($enviado && $errorCorto){
+                echo "<span>* Tiene que tener mínimo 2 caracteres *</span>";
             }
         ?>
     </p>
@@ -41,7 +45,7 @@
     
     
     <?php
-        if ($enviado && !$errorNada){
+        if ($enviado && !$noErrores){
             ?>
             <div id="cajaRes1">
             <h2>Palíndromos / capícuas - Resultado</h2>

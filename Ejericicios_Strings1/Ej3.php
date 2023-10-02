@@ -45,14 +45,18 @@
     
     
     <?php
+        function mi_stringReplace($str){
+            $palabrasArr = explode(" ", $str);
+            $palabrasJuntas = implode("", $palabrasArr);
+            return $palabrasJuntas;
+        }
         if ($enviado && $noErrores){
             ?>
             <div id="cajaRes1">
             <h2>Frases palíndromas - Resultado</h2>
             <?php
                 // Exploto la frase para mirar solo las palabras
-                $palabrasArr = explode($envTratado, " ");
-                $palabrasJuntas = implode("", $palabrasArr);
+                $palabrasJuntas = mi_stringReplace($envTratado);
 
                 // Miro si es palindromo
                 $esPalindromo = true;

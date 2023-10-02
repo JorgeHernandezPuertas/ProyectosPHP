@@ -73,7 +73,7 @@
         ?>
     </p>
     
-    <p><input type="submit" value="Comprobar" name="btnEnviar" /></p>
+    <p><input type="submit" value="Convertir" name="btnEnviar" /></p>
     </form>
     </div>
     
