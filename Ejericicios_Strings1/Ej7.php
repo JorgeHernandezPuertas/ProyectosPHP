@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ejercicio 6</title>
+    <title>Ejercicio 7</title>
     <style>
     #cajaForm {background-color: lightblue;border: 1px solid black;margin-bottom: 10px;padding:10px} 
     #cajaRes1 {background-color: lightgreen;border: 1px solid black;padding:10px} 
@@ -14,7 +14,7 @@
     <?php
     $enviado = isset($_POST["btnEnviar"]);
     if ($enviado){
-        $envTratado = strtolower(trim($_POST["p1"]));
+        $envTratado = trim($_POST["p1"]);
         $errorVacio = $envTratado == "";
         // Hago una regex para validar el formato de entrada
         $errorFormato = !preg_match("/^(-?\d+[.,]?\d*){1}( -?\d+[.,]?\d*)*$/", $envTratado);
@@ -52,11 +52,10 @@
             <div id="cajaRes1">
             <h2>Unifica separador decimal - Resultado</h2>
             <?php
-                function corregirComa(){
-                    
-                }
+                $sinComas = str_replace(",", ".", $envTratado);
+
                 // Enseño el div que corresponda en función de lo que sea
-                echo "<p>Números originales<ul>$envTratado</ul>  Números corregidos <ul>$sinAcentos</ul></p>";
+                echo "<p>Números originales<ul>$envTratado</ul>  Números corregidos <ul>$sinComas</ul></p>";
             ?>
             </div>
             <?php
