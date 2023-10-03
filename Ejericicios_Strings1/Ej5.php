@@ -12,12 +12,12 @@
 </head>
 <body>
     <?php
-    $enviado = isset($_POST["btnEnviar"]);
+    $enviado = isset($_POST["btnEnviar"]); // Compruebo errores
     if ($enviado){
         $envTratado = strtoupper(trim($_POST["p1"]));
         $errorVacio = $envTratado == "";
         // Compruebo si es un numero natural
-        $errorNumero = !is_int($envTratado);
+        $errorNumero = !preg_match("/^\d*$/", $envTratado); // Miro si es un int
         $mayorQue5000 = $envTratado > 5000;
 
         // Veo si no tiene ningún error
@@ -57,13 +57,66 @@
             <?php
             // Procedo el número normal a romano
             $romano = "";
-            for ($i=0; $i < strlen($envTratado); $i++) { 
-                
+            $revesNumero = strrev($envTratado);
+            for ($i = 0; $i < strlen($revesNumero); $i++) { 
+                switch ($i) {
+                    case 0:
+                        if ($revesNumero[$i] < 5){ // Si es menor de 5 relleno con la letra correspondiente
+                            for ($j=0; $j < $revesNumero[$i]; $j++) { 
+                                $romano .= "I";
+                            }
+                        } else { // Si es mayor pongo el siguiente y relleno lo que haga falta con la correspondiente
+                            for ($j=0; $j < $revesNumero[$i] - 5; $j++) { 
+                                $romano .= "I";
+                            }
+                            $romano .= "V";
+                        }
+                        break;
+                    case 1:
+                        if ($revesNumero[$i] < 5){ // Si es menor de 5 relleno con la letra correspondiente
+                            for ($j=0; $j < $revesNumero[$i]; $j++) { 
+                                $romano .= "X";
+                            }
+                        } else { // Si es mayor pongo el siguiente y relleno lo que haga falta con la correspondiente
+                            for ($j=0; $j < $revesNumero[$i] - 5; $j++) { 
+                                $romano .= "X";
+                            }
+                            $romano .= "L";
+                        }
+                        break;
+                    case 2:
+                        if ($revesNumero[$i] < 5){ // Si es menor de 5 relleno con la letra correspondiente
+                            for ($j=0; $j < $revesNumero[$i]; $j++) { 
+                                $romano .= "C";
+                            }
+                        } else { // Si es mayor pongo el siguiente y relleno lo que haga falta con la correspondiente
+                            for ($j=0; $j < $revesNumero[$i] - 5; $j++) { 
+                                $romano .= "C";
+                            }
+                            $romano .= "D";
+                        }
+                        break;
+                    case 3:
+                        if ($revesNumero[$i] < 5){ // Si es menor de 5 relleno con la letra correspondiente
+                            for ($j=0; $j < $revesNumero[$i]; $j++) { 
+                                $romano .= "M";
+                            }
+                        } else { // Si es mayor pongo el siguiente y relleno lo que haga falta con la correspondiente
+                            $romano .= "DD";
+                            for ($j=0; $j < 5; $j++) { 
+                                $romano .= "M";
+                            }
+                        }
+                    default:
+                        break;
+                }
             }
+            // Lo pongo del derecho
+            $romano = strrev($romano);
 
 
                 // Enseño el div que corresponda en función de lo que sea
-                echo "<p>El número romano ".$envTratado." se escribe en cifras árabes ".$valorArabe."</p>";
+                echo "<p>El número ".$envTratado." se escribe en números romanos ".$romano."</p>";
             ?>
             </div>
             <?php
