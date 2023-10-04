@@ -8,14 +8,29 @@
 
     $error_form = false;
 
+    function Letra_NIF($dni){
+        return substr("TRWAGMYFPDXBNJZSQVHLCKEO", substr($dni, 0, 8) % 23, 1);
+    }
+
+    function dni_valido($dni){
+        if (strtoupper(substr($dni, -1)) == Letra_NIF($dni)){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     if (isset($_POST["btnEnviar"])){ // Compruebo errores
         $error_nombre = $_POST["nombre"] == "";
         $error_apellidos = $_POST["apellidos"] == "";
         $error_contra = $_POST["contra"] == "";
         $error_sexo = !isset($_POST["sexo"]);
         $error_comentarios = $_POST["comentarios"] == "";
+        $error_dni_vacio = $_POST["dni"] == "";
+        $error_formato_dni = !preg_match("/^\d{8}([A-Z]||[a-z])$/", $_POST["dni"]);
+        $error_dni = $error_dni_vacio || $error_formato_dni || !dni_valido($_POST["dni"]);
         $error_form = $error_nombre || $error_apellidos || $error_contra
-        || $error_sexo || $error_comentarios;
+        || $error_sexo || $error_comentarios || $error_dni;
     }
 
     if (isset($_POST["btnEnviar"]) && !$error_form){
