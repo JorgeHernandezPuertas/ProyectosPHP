@@ -45,17 +45,17 @@
         <br />
 
         <label for="dni">DNI</label><br />
-        <input type="text" placeholder="DNI: 11223344Z" id="dni" name="dni" size="10" value="<?php if (isset($_POST["dni"])) echo $_POST["dni"]; ?>"/>
-        <?php 
-        if (isset($_POST["dni"]) && $error_dni){
-            if ($error_dni_vacio){
+        <input type="text" placeholder="DNI: 11223344Z" id="dni" name="dni" size="10" value="<?php if (isset($_POST["dni"])) echo $_POST["dni"]; ?>" />
+        <?php
+        if (isset($_POST["dni"]) && $error_dni) {
+            if ($error_dni_vacio) {
                 echo "<span class='error'> Campo vacio </span>";
-            } else if ($error_formato_dni){
+            } else if ($error_formato_dni) {
                 echo "<span class='error'> Error en el formato del dni </span>";
             } else {
                 echo "<span class='error'> Error en la letra de dni </span>";
             }
-        } 
+        }
         ?>
         <br />
 
@@ -73,7 +73,17 @@
                                                                         echo "checked";
                                                                     } ?> /> <label for="mujer">Mujer</label>
 
-        <p><label for="archivo">Incluir mi foto:</label> <input type="file" id="archivo" name="archivo" accept="image/*" /></p>
+        <p><label for="archivo">Incluir mi foto:</label> <input type="file" id="archivo" name="archivo" accept="image/*" />
+            <?php
+            if (isset($_POST["btnEnviar"]) && $_FILES["archivo"]["name"] != "" && $error_imagen) {
+                if ($error_tipo) {
+                    echo "<span class='error'>El archivo subido no es de un tipo imagen</span>";
+                } else {
+                    echo "<span class='error'>El archivo subido supera los 500KB</span>";
+                }
+            }
+            ?>
+        </p>
 
         <p><label for="nacido">Nacido en: </label>
             <select id="nacido" name="nacido">

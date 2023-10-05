@@ -22,7 +22,9 @@
             <input type="file" name="archivo" id="archivo" accept="image/*" />
             <?php 
             if (isset($_POST["btnEnviar"]) && $error_fichero){
-                if ($error_fichero_vacio){
+                if ($_FILES["archivo"]["error"]){
+                    echo "<span class='error'>Ha habido un error enviando el archivo</span>";
+                } else if ($error_fichero_vacio){
                     echo "<span class='error'>No se ha enviado el archivo</span>";
                 } else if (isset($_POST["btnEnviar"]) && $error_fichero_tipo){
                     echo "<span class='error'>Tipo del archivo no válido</span>";
