@@ -50,9 +50,13 @@
             <?php
                 function quitarAcentos($str){
                     $vocalesAcento = array("á", "é", "í", "ó", "ú", "ü",
-                                           "Á", "É", "Í", "Ó", "Ú", "Ü");
+                                           "Á", "É", "Í", "Ó", "Ú", "Ü", 
+                                           "à", "è", "ì", "ò", "ù",
+                                           "À", "È", "Ì", "Ò", "Ù");
                     $vocalesSinAcento = array("a", "e", "i", "o", "u", "u", 
-                                              "A", "E", "I", "O", "U", "U");
+                                              "A", "E", "I", "O", "U", "U",
+                                              "a", "e", "i", "o", "u", "u", 
+                                              "A", "E", "I", "O", "U", "U",);
 
                     $sinAcentos = str_replace($vocalesAcento, $vocalesSinAcento, $str);
                     $sinAcentos = strtolower($sinAcentos);
