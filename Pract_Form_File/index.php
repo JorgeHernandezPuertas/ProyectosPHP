@@ -17,9 +17,9 @@ if (isset($_POST["btnEnviar"])){
     // Controlo dni
     $dni = strtoupper(trim($_POST["dni"]));
     $error_dni_vacio = $dni == "";
-    $error_dni_formato = preg_match("/^\d{8}[A-Z]$/", $dni);
+    $error_dni_formato = !preg_match("/^\d{8}[A-Z]$/", $dni);
     $error_dni_letra = false;
-    if ($error_dni_formato){
+    if (!$error_dni_formato){
         $error_dni_letra = LetraNIF(substr($dni, 0, 8)) != substr($dni, -1);
     }
     $error_dni = $error_dni_vacio || $error_dni_formato || $error_dni_letra;
@@ -29,7 +29,7 @@ if (isset($_POST["btnEnviar"])){
     // Si se envia una foto
     $error_foto = false;
     if ($_FILES["imagen"]["name"] != ""){ 
-        $error_tam = $_FILES["imagen"]["size"] < 500 * 1024;
+        $error_tam = $_FILES["imagen"]["size"] > 500 * 1024;
         $error_tipo = !getimagesize($_FILES["imagen"]["tmp_name"]);
         $error_foto = $error_tam || $error_tipo;
     }
@@ -39,7 +39,7 @@ if (isset($_POST["btnEnviar"])){
 }
 
 // Envio a las diferentes vistas dependiendo de los errores
-if (isset($_POST["btnEnviar"]) && $errores){ 
+if (isset($_POST["btnEnviar"]) && !$errores){ 
     require "vistas/vista_enviado.php";
 } else {
     require "vistas/vista_formulario.php";
