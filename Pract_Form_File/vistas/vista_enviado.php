@@ -23,9 +23,9 @@
     if ($_FILES["imagen"]["name"] != ""){
         // Cojo la extensión del archivo
         $extension = "";
-        if (substr_count(".", $_FILES["imagen"]["name"] > 0)){
-            $arrayPartes = explode(".", $_FILES["imagen"]["name"]);
-            $extension = end($arrayPartes);
+        $arrayPartes = explode(".", $_FILES["imagen"]["name"]);
+        if (count($arrayPartes) >= 1){
+            $extension = "." . end($arrayPartes);
         }
         $nombre_unico = md5(uniqid(uniqid(),true));
         $nombre_final = $nombre_unico . $extension;
@@ -39,7 +39,7 @@
         print "<strong>Tipo archivo: </strong>".$_FILES["imagen"]["type"]."<br/>";
         print "<strong>Tamaño archivo: </strong>".$_FILES["imagen"]["size"]." bytes<br/>";
         // Subo la imagen
-        @$var = move_uploaded_file($_FILES["imagen"]["name"], "images/$nombre_final");
+        @$var = move_uploaded_file($_FILES["imagen"]["tmp_name"], "images/$nombre_final");
         if ($var){
             print "<p>La imagen ha sido subida con éxito</p>";
         } else {

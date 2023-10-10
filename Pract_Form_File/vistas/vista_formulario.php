@@ -73,7 +73,7 @@
             <label for="imagen">Incluir mi foto (Archivo de tipo imagen Máx. 500KB): </label>
             <input type="file" name="imagen" id="imagen" accept="image/*" />
             <?php
-            if ($_FILES["imagen"]["name"] != ""){
+            if (isset($_POST["btnEnviar"]) && $_FILES["imagen"]["name"] != ""){
                 if ($error_tipo){
                     print "<span class='error'> *No has introducido una imagen* </span>";
                 } else if ($error_tam){
