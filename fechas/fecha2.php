@@ -61,6 +61,17 @@ if (isset($_POST["btnEnviar"])) {
             </select> 
             <label for="mes1">Mes: </label>
             <select name="mes1" id="mes1">
+                <?php
+                $meses = Array(1 => "Enero", 2 => "Febrero", 3 => "Marzo", 4 => "Abril", 5 => "Mayo", 6 => "Junio", 7 => "Julio", 8 => "Agosto",
+                 9 => "Septiembre", 10 => "Octubre", 11 => "Noviembre", 12 => "Diciembre");
+                foreach($meses as $i => $v){
+                    if (isset($_POST["btnEnviar"]) && $_POST["mes1"] == $i){
+                        printf("<option value='%02d' selected >%s</option>", $i, $v);
+                    } else {
+                        printf("<option value='%02d'>%s</option>", $i, $v);
+                    }
+                }
+                ?>
                 <option value="01" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes1"] == "01") print "selected"; ?>>Enero</option>
                 <option value="02" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes1"] == "02") print "selected"; ?>>Febrero</option>
                 <option value="03" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes1"] == "03") print "selected"; ?>>Marzo</option>
@@ -107,18 +118,15 @@ if (isset($_POST["btnEnviar"])) {
             </select> 
             <label for="mes2">Mes: </label>
             <select name="mes2" id="mes2">
-                <option value="01" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes2"] == "01") print "selected"; ?>>Enero</option>
-                <option value="02" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes2"] == "02") print "selected"; ?>>Febrero</option>
-                <option value="03" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes2"] == "03") print "selected"; ?>>Marzo</option>
-                <option value="04" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes2"] == "04") print "selected"; ?>>Abril</option>
-                <option value="05" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes2"] == "05") print "selected"; ?>>Mayo</option>
-                <option value="06" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes2"] == "06") print "selected"; ?>>Junio</option>
-                <option value="07" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes2"] == "07") print "selected"; ?>>Julio</option>
-                <option value="08" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes2"] == "08") print "selected"; ?>>Agosto</option>
-                <option value="09" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes2"] == "09") print "selected"; ?>>Septiembre</option>
-                <option value="10" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes2"] == "10") print "selected"; ?>>Octubre</option>
-                <option value="11" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes2"] == "11") print "selected"; ?>>Noviembre</option>
-                <option value="12" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes2"] == "12") print "selected"; ?>>Diciembre</option>
+            <?php
+                foreach($meses as $i => $v){
+                    if (isset($_POST["btnEnviar"]) && $_POST["mes2"] == $i){
+                        printf("<option value='%02d' selected >%s</option>", $i, $v);
+                    } else {
+                        printf("<option value='%02d'>%s</option>", $i, $v);
+                    }
+                }
+                ?>
             </select> 
             <label for="anio2">Año: </label>
             <select name="anio2" id="anio2">
