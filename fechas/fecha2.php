@@ -72,23 +72,14 @@ if (isset($_POST["btnEnviar"])) {
                     }
                 }
                 ?>
-                <option value="01" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes1"] == "01") print "selected"; ?>>Enero</option>
-                <option value="02" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes1"] == "02") print "selected"; ?>>Febrero</option>
-                <option value="03" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes1"] == "03") print "selected"; ?>>Marzo</option>
-                <option value="04" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes1"] == "04") print "selected"; ?>>Abril</option>
-                <option value="05" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes1"] == "05") print "selected"; ?>>Mayo</option>
-                <option value="06" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes1"] == "06") print "selected"; ?>>Junio</option>
-                <option value="07" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes1"] == "07") print "selected"; ?>>Julio</option>
-                <option value="08" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes1"] == "08") print "selected"; ?>>Agosto</option>
-                <option value="09" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes1"] == "09") print "selected"; ?>>Septiembre</option>
-                <option value="10" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes1"] == "10") print "selected"; ?>>Octubre</option>
-                <option value="11" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes1"] == "11") print "selected"; ?>>Noviembre</option>
-                <option value="12" <?php if (isset($_POST["btnEnviar"]) && $_POST["mes1"] == "12") print "selected"; ?>>Diciembre</option>
             </select> 
             <label for="anio1">Año: </label>
             <select name="anio1" id="anio1">
                 <?php
-                for ($i=1970; $i < 2080; $i++) {  // Empiezo en 1970 porque es el año de inicio de la informática
+                // Hago 50 atras años desde este año
+                $anioActual = date("Y");
+
+                for ($i=$anioActual - 50; $i <= $anioActual; $i++) {
                     if (isset($_POST["btnEnviar"]) && $_POST["anio1"] == $i){
                         print "<option value='$i' selected >$i</option>";
                     } else {
@@ -131,7 +122,7 @@ if (isset($_POST["btnEnviar"])) {
             <label for="anio2">Año: </label>
             <select name="anio2" id="anio2">
                 <?php
-                for ($i=1970; $i < 2080; $i++) { 
+                for ($i=$anioActual - 50; $i <= $anioActual; $i++) { 
                     if (isset($_POST["btnEnviar"]) && $_POST["anio2"] == $i){
                         print "<option value='$i' selected >$i</option>";
                     } else {
