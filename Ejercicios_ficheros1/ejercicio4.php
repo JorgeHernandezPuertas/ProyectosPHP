@@ -28,7 +28,7 @@ if (isset($_POST["btnEnviar"])){
     <form action="ejercicio4.php" method="post" enctype="multipart/form-data">
         <p>
         <label for="fic">Introduce un fichero de texto (.txt) (Máx 2.5MB): </label>
-        <input type="file" name="fic" id="fic" accept="text/*"> 
+        <input type="file" name="fic" id="fic" accept=".txt"> 
         <?php
         if (isset($_POST["btnEnviar"]) && $error_form){
             if ($_FILES["fic"]["name"] == ""){
@@ -58,13 +58,17 @@ if (isset($_POST["btnEnviar"])){
         // Establezco la ruta del fichero
         $rutaFichero = "ficheros/$nombre_nuevo";
 
-        // Cojo todo el contenido del fichero
-        $contenido_fichero = file_get_contents($rutaFichero);
+        @$fd = fopen($rutaFichero, "r");
+        if (!$fd){
+            die("<p>No se puede leer el archivo</p>");
+        }
 
-        // Cuento las palabras del fichero
-        $palabras_fichero = str_word_count($contenido_fichero);
+        $contador = 0;
+        while($linea = fgets($fd)){
+            $contador += str_word_count($linea);
+        }
 
-        print "<p>El fichero subido tiene $palabras_fichero palabras escritas en él.</p>";
+        print "<p>El fichero subido tiene $contador palabras escritas en él.</p>";
 
     }
     ?>
