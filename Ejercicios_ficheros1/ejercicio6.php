@@ -12,6 +12,7 @@
         th {
             border: 1px black solid;
             border-collapse: collapse;
+            text-align: center;
         }
 
         table {
@@ -21,10 +22,6 @@
         td,
         th {
             padding: 0.25em
-        }
-
-        .error {
-            color: red
         }
     </style>
 </head>
@@ -45,6 +42,8 @@
         $array_primer_elemento = explode(",", $array_elementos[0]);
         $iniciales[] = end($array_primer_elemento);
     }
+
+    fclose($fd);
 
     ?>
     <form action="ejercicio6.php" method="post">
@@ -69,7 +68,10 @@
     if (isset($_POST["btnEnviar"])) {
 
         // Pongo el puntero del lector al inicio
-        fseek($fd, 0);
+        @$fd = fopen("http://dwese.icarosproject.com/PHP/datos_ficheros.txt" ,"r");
+        if (!$fd) {
+            die("<p>No se ha podido conectar con los datos.</p>");
+        }
 
         print "<table>";
 
@@ -91,16 +93,16 @@
         while ($linea = fgets($fd)) {
             // Separo cada elemento de la linea
             $array_elementos = explode("\t", $linea);
+            $array_inicial = explode(",", $array_elementos[0]);
+            $inicial_actual = end($array_inicial);
 
             // Si es la cabecera o la inicial seleccionada la imprimo
-            if ($_POST["inicial"] == $inicial_Actual || "geo\\time" == $inicial_Actual) {
+            if ($_POST["inicial"] == $inicial_actual) {
                 // Abro la fila de la tabla
                 print "<tr>";
                 // Pongo los elementos en la fila
                 for ($i = 0; $i < $n_col; $i++) {
                     if ($i == 0) {
-                        $array_inicial = explode(",", $array_elementos[0]);
-                        $inicial_actual = end($array_inicial);
                         print "<th>$inicial_actual</th>";
                     } else if (isset($array_elementos[$i])) {
                         print "<td>".$array_elementos[$i]."</td>";
