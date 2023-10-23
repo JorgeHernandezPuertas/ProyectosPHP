@@ -9,7 +9,9 @@ if (file_exists("Horario/horarios.txt")) {
     }
 
     while($linea = fgets($fd)){
-        
+        if (isset($_POST["btnEnviar"]) && $_POST["profesor"] == $linea){
+            
+        }
     }
 
 
