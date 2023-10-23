@@ -9,8 +9,11 @@ if (file_exists("Horario/horarios.txt")) {
     }
 
     while($linea = fgets($fd)){
-        if (isset($_POST["btnEnviar"]) && $_POST["profesor"] == $linea){
-            
+        $array_linea = mi_explode("\t", $linea);
+        $profesor = $array_linea[0];
+        $profesores[] = $profesor;
+        if (isset($_POST["btnEnviar"]) && $_POST["profesor"] == $profesor){
+            $elementos_elegidos = $array_linea;
         }
     }
 
@@ -32,10 +35,26 @@ if (file_exists("Horario/horarios.txt")) {
         <form action="ejercicio4.php" method="post">
             <label for="profesor">Horario del Profesor: </label>
             <select name="profesor" id="profesor">
-
+            <?php
+            foreach($profesores as $profesor){
+                if (isset($_POST["btnEnviar"]) && $_POST["profesor"] == $profesor){
+                    print "<option value='$profesor' selected >$profesor</option>";
+                } else {
+                    print "<option value='$profesor' >$profesor</option>";
+                }
+            }
+            ?>
             </select>
             <button name="btnEnviar">Ver horario</button>
         </form>
+        <?php
+        if (isset($_POST["btnEnviar"])){
+            print "<table><caption>Horario del profesor: <em>".$_POST["profesor"]."</em></caption>";
+
+
+            print "</table>";
+        }
+        ?>
     </body>
 
     </html>
