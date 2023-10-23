@@ -8,11 +8,11 @@ if (file_exists("Horario/horarios.txt")) {
         die("<p>No se ha podido leer el archivo</p>");
     }
 
-    while($linea = fgets($fd)){
+    while ($linea = fgets($fd)) {
         $array_linea = mi_explode("\t", $linea);
         $profesor = $array_linea[0];
         $profesores[] = $profesor;
-        if (isset($_POST["btnEnviar"]) && $_POST["profesor"] == $profesor){
+        if (isset($_POST["btnEnviar"]) && $_POST["profesor"] == $profesor) {
             $elementos_elegidos = $array_linea;
         }
     }
@@ -27,6 +27,21 @@ if (file_exists("Horario/horarios.txt")) {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Practica examen 1 - Ejercicio 4</title>
+        <style>
+            table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+                text-align: center;
+            }
+
+            th, td {
+                padding: 0.25em;
+            }
+
+            th {
+                background-color: lightgray;
+            }
+        </style>
     </head>
 
     <body>
@@ -35,22 +50,48 @@ if (file_exists("Horario/horarios.txt")) {
         <form action="ejercicio4.php" method="post">
             <label for="profesor">Horario del Profesor: </label>
             <select name="profesor" id="profesor">
-            <?php
-            foreach($profesores as $profesor){
-                if (isset($_POST["btnEnviar"]) && $_POST["profesor"] == $profesor){
-                    print "<option value='$profesor' selected >$profesor</option>";
-                } else {
-                    print "<option value='$profesor' >$profesor</option>";
+                <?php
+                foreach ($profesores as $profesor) {
+                    if (isset($_POST["btnEnviar"]) && $_POST["profesor"] == $profesor) {
+                        print "<option value='$profesor' selected >$profesor</option>";
+                    } else {
+                        print "<option value='$profesor' >$profesor</option>";
+                    }
                 }
-            }
-            ?>
+                ?>
             </select>
             <button name="btnEnviar">Ver horario</button>
         </form>
         <?php
-        if (isset($_POST["btnEnviar"])){
-            print "<table><caption>Horario del profesor: <em>".$_POST["profesor"]."</em></caption>";
+        if (isset($_POST["btnEnviar"])) {
+            print "<table><caption><strong>Horario del profesor: <em>" . $_POST["profesor"] . "</em></strong></caption>";
+            $n_col = count($elementos_elegidos);
+            // Pongo la cabecera
+            $dias = array("", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes");
+            print "<tr>";
+            for ($i = 0; $i < 6; $i++) {
+                print "<th>".$dias[$i]."</th>";
+            }
+            print "</tr>";
 
+            // Pongo por horas
+            $horas = array(1 => "8:15 - 9:15", "9:15 - 10:15", "10:15 - 11:15", "11:15 - 11:45", "11:45 - 12:45", "12:45 - 13:45", "13:45 - 14:45");
+            foreach($horas as $indice_hora => $hora){
+                print "<tr>";
+                if ($indice_hora == 4){
+                    print "<th>$hora</th>";
+                    print "<td colspan='5'>RECREO</td>";
+                } else {
+                    foreach ($dias as $indice_dia => $dia) {
+                        if ($dia == ""){
+                            print "<th>$hora</th>";
+                        } else {
+                            
+                        }
+                    }
+                }
+                print "</tr>";
+            }
 
             print "</table>";
         }
