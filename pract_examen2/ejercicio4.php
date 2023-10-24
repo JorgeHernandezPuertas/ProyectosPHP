@@ -86,7 +86,14 @@ if (file_exists("Horario/horarios.txt")) {
                         if ($dia == ""){
                             print "<th>$hora</th>";
                         } else {
-                            
+                            $clases_dia_hora = "";
+                            foreach($elementos_elegidos as $indice => $elemento){
+                                if (($indice - 1) % 3 == 0 && $elemento == $indice_dia && $elementos_elegidos[$indice + 1] == $indice_hora){
+                                    $clases_dia_hora .= $elementos_elegidos[$indice + 2]."/";
+                                }
+                            }
+                            $clases_dia_hora = quitarElemento($clases_dia_hora, mi_strlen($clases_dia_hora) - 1); // Le quito la última "/"
+                            print "<td>$clases_dia_hora</td>";
                         }
                     }
                 }

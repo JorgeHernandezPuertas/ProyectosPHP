@@ -65,4 +65,14 @@
         return $palabra_separada;
 
     }
+
+    function quitarElemento($palabra, $indice){
+        $nueva_palabra = "";
+        for ($i=0; $i < mi_strlen($palabra); $i++) { 
+            if ($indice != $i){
+                $nueva_palabra .= $palabra[$i];
+            }
+        }
+        return $nueva_palabra;
+    }
 ?>

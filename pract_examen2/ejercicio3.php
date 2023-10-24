@@ -49,22 +49,25 @@ if (isset($_POST["btnEnviar"])) {
 
     </form>
     <?php
-    $cont = 0;
-    $explotado = mi_explode($_POST["separador"], $_POST["palabra"]);
-    foreach ($explotado as $v) {
-        if ($v != "") {
-            $cont++;
+    if (isset($_POST["btnEnviar"]) && !$error_form) {
+        $cont = 0;
+        $explotado = mi_explode($_POST["separador"], $_POST["palabra"]);
+        foreach ($explotado as $v) {
+            if ($v != "") {
+                $cont++;
+            }
+        }
+
+        if ($cont == 0) {
+            print "<p>No has introducido ninguna palabra.</p>";
+        } else if ($cont <= 1) {
+            print "<p>Has introducido 1 palabra.</p>";
+        } else {
+            print "<p>Has introducido $cont palabras.</p>";
         }
     }
 
-    if ($cont == 0){
-        print "<p>No has introducido ninguna palabra.</p>";
-    } else if ($cont <= 1){
-        print "<p>Has introducido 1 palabra.</p>";
-    } else {
-        print "<p>Has introducido $cont palabras.</p>";
-    }
-    
+
     ?>
 </body>
 
