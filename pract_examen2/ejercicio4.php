@@ -17,7 +17,7 @@ if (file_exists("Horario/horarios.txt")) {
         }
     }
 
-
+    fclose($fd);
 
 ?>
     <!DOCTYPE html>
