@@ -50,12 +50,6 @@ if (isset($_POST["btnEnviar"])) {
     </form>
     <?php
     if (isset($_POST["btnEnviar"]) && !$error_form) {
-/* Prueba
-        $palabras = ejemplo($_POST["separador"], $_POST["palabra"]);
-        foreach ($palabras as $key => $value) {
-            print "<p>$value</p>";
-        }
-*/
         $cont = 0;
         $explotado = mi_explode($_POST["separador"], $_POST["palabra"]);
         foreach ($explotado as $v) {

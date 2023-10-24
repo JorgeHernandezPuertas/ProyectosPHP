@@ -76,7 +76,7 @@
         return $nueva_palabra;
     }
 
-    function ejemplo($sep, $texto){
+    function ejemplo($sep, $texto){ // Como lo ha hecho el profesor pero simplificado
         $aux=[];
         $l_texto=mi_strlen($texto);
 
@@ -89,6 +89,8 @@
                 for ($j=$i; $j < $l_texto; $j++) { 
                     if ($texto[$j] != $sep){
                         $aux2 .= $texto[$j];
+                    } else {
+                        break;
                     }
                 }
                 $i = $j;
