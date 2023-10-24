@@ -75,4 +75,27 @@
         }
         return $nueva_palabra;
     }
+
+    function ejemplo($sep, $texto){
+        $aux=[];
+        $l_texto=mi_strlen($texto);
+
+        for ($i=0; $i < $l_texto; $i++) { 
+            while ($i < $l_texto && $texto[$i] == $sep){
+                $i++;
+            }
+            if ($i < $l_texto){ // Si no he acabado
+                $aux2 = "";
+                for ($j=$i; $j < $l_texto; $j++) { 
+                    if ($texto[$j] != $sep){
+                        $aux2 .= $texto[$j];
+                    }
+                }
+                $i = $j;
+                $aux[] = $aux2; // Meto la palabra entera
+            }
+        }
+
+        return $aux;
+    }
 ?>
