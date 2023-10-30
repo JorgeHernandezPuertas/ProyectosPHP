@@ -45,7 +45,7 @@
         // Genero el cuerpo del fichero
         for ($i=0; $i < 26; $i++) { 
             for ($j=ord("A"); $j <= ord("Z") + 1; $j++) { 
-                if ($j == ord("A")){
+                if ($j == ord("A")){ // Esto if lo meto por el ;
                     $letra = chr($i + $j);
                 } else {
                     $letra = ";".chr(($j + $i - ord("A")) % 26 + ord("A"));
