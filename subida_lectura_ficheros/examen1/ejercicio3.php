@@ -94,7 +94,7 @@ if (isset($_POST["btnEnviar"])){
             for ($i=0; $i < strlen($entrada); $i++) { 
                 if (esta_matriz($entrada[$i], $lineas_fichero) != -1){
                     $num_fila = esta_matriz($entrada[$i], $lineas_fichero);
-                    $texto_codificado .= $lineas_fichero[$num_fila][$_POST["des"]];
+                    $texto_codificado .= $lineas_fichero[$num_fila + 1][$_POST["des"]];
                 } else {
                     $texto_codificado .= $entrada[$i];
                 }
