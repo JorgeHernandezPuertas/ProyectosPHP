@@ -61,10 +61,12 @@ if (isset($_POST["btnNuevoUsuario"]) || isset($_POST["btnContinuar"])) {
                         mysqli_close($conexion);
                         die(error_page("Práctica 1º CRUD", "<h1> Práctica 1º CRUD </h1><p class='error'> Ha ocurrido un error insertando los datos " . $e->getMessage() . "</p>"));
                     }
+                    mysqli_close($conexion);
+                    header("Location: index.php");
+                    exit;
                 }
                 mysqli_close($conexion);
-                header("Location: index.php");
-                exit;
+                
             }
 
     }
