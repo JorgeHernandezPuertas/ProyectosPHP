@@ -24,11 +24,9 @@
 <body>
     <h1>Listado de los usuarios</h1>
     <?php
-    define("HOST", "localhost");
-    define("USER", "jose");
-    define("PWD", "josefa");
-    define("BD", "bd_foro");
+    
     try {
+        require "constantes_conexion.php";
         $conexion = mysqli_connect(HOST, USER, PWD, BD);
         mysqli_set_charset($conexion, "utf8");
     } catch (mysqli_sql_exception $e) {
@@ -45,6 +43,7 @@
     }
 
     $nombres = mysqli_fetch_all($resultado);
+    mysqli_free_result($resultado);
     mysqli_close($conexion);
 
     print "<table><tr><th>Nombre de Usuario</th><th>Borrar</th><th>Editar</th></tr>";
