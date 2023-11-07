@@ -33,7 +33,7 @@ if (isset($_POST["btnNuevoUsuario"]) || isset($_POST["btnContinuar"])) {
                     die(error_page("Práctica 1º CRUD", "<h1> Práctica 1º CRUD </h1><p class='error'> No se ha podido establecer la conexión con la base de datos ". $e -> getMessage()." </p>"));
                 }
     
-                $consulta = "select * from usuarios";
+                $consulta = "select usuario, email from usuarios";
     
                 try {
                     $resultado = mysqli_query($conexion, $consulta);
