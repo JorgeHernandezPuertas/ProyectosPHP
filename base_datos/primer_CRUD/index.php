@@ -1,3 +1,24 @@
+<?php
+require "constantes_conexion.php";
+
+if (isset($_POST["btnContBorrar"])) {
+
+    $conexion = conectar_bd("");
+
+    try {
+        $consulta = "delete from usuarios where id_usuario='" . $_POST["btnContBorrar"] . "'";
+        $resultado = mysqli_query($conexion, $consulta);
+    } catch (mysqli_sql_exception $e) {
+        mysqli_close($conexion);
+        die("<p>Ha habido un error realizando la consulta: " . $e->getMessage() . "</p></body></html>");
+    }
+    mysqli_close($conexion);
+    // Para borrar el post enviado en las recargas y que no se haga cada vez que recarga
+    // habria que poner header(Location: "index.php")
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -35,14 +56,7 @@
 <body>
     <h1>Listado de los usuarios</h1>
     <?php
-
-    try {
-        require "constantes_conexion.php";
-        $conexion = mysqli_connect(HOST, USER, PWD, BD);
-        mysqli_set_charset($conexion, "utf8");
-    } catch (mysqli_sql_exception $e) {
-        die("<p>No se ha podido conectar a la base de datos: " . $e->getMessage() . "</p></body></html>");
-    }
+    $conexion = conectar_bd("</body></html>");
 
     $consulta = "select * from usuarios";
 
@@ -69,6 +83,7 @@
         </td>
         <td>
         <form  action='index.php' method='post'>
+        <input type='hidden' name='nombreUsuario' value='" . $v[1] . "'>
         <button type='submit' name='btnBorrar' value='" . $v[0] . "' >
         <img src='images/borrar.png' alt='Imagen de una cruz' width='50' title='Borrar usuario' >
         </form>
@@ -102,10 +117,10 @@
         if (mysqli_num_rows($resultado) > 0) { // Controlamos el error de si ha sido borrado mientras tienes la página cargada
             $datos_usuario = mysqli_fetch_assoc($resultado);
             mysqli_free_result($resultado);
-    
-            print "<p><strong>Nombre:</strong> ".$datos_usuario["nombre"]."</p>";
-            print "<p><strong>Usuario:</strong> ".$datos_usuario["usuario"]."</p>";
-            print "<p><strong>Email:</strong> ".$datos_usuario["email"]."</p>";
+
+            print "<p><strong>Nombre:</strong> " . $datos_usuario["nombre"] . "</p>";
+            print "<p><strong>Usuario:</strong> " . $datos_usuario["usuario"] . "</p>";
+            print "<p><strong>Email:</strong> " . $datos_usuario["email"] . "</p>";
         } else {
             print "<p>El usuario seleccionado ha sido eliminado de la base de datos</p>";
         }
@@ -118,10 +133,21 @@
     <?php
     } else if (isset($_POST["btnBorrar"])) {
         // Código para borrar
+        print "<p>Se dispone usted a borrar al usuario <strong>" . $_POST["nombreUsuario"] . "</strong></p>";
 
+        print "<form action='index.php' method='post'>";
+        print "<p>
+        <button type='submit' name='btnContBorrar' value='" . $_POST["btnBorrar"] . "'>Continuar</button>
+        <button type='submit'>Atrás</button>
+        </p>";
+        print "</form>";
+
+        mysqli_close($conexion);
     } else if (isset($_POST["btnEditar"])) {
         // Código para editar
+        
 
+        mysqli_close($conexion);
     } else {
     ?>
         <form action="usuario_nuevo.php" method="post">
