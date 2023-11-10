@@ -22,7 +22,7 @@ if (isset($_POST["btnContBorrar"])) {
     exit();
 }
 
-if (isset($_POST["btnContMod"])) {
+if (isset($_POST["btnModCont"])) {
     // Compruebo los errores del formulario
     $error_nombre = $_POST["nombre"] == "" || strlen($_POST["nombre"]) > 30;
     if (!$error_nombre) {
@@ -33,7 +33,7 @@ if (isset($_POST["btnContMod"])) {
             die(error_page("Práctica 1º CRUD", "<h1>Práctica 1º CRUD</h1><p>No he podido conectarse a la base de batos: " . $e->getMessage() . "</p>"));
         }
 
-        $error_nombre = repetido_excluido($conexion, "usuarios", "nombre", $_POST["nombre"], $_POST["btnContMod"]);
+        $error_nombre = repetido_excluido($conexion, "usuarios", "nombre", $_POST["nombre"], $_POST["btnModCont"]);
 
         if (is_string($error_nombre))
             die($error_nombre);
@@ -49,7 +49,7 @@ if (isset($_POST["btnContMod"])) {
                 die(error_page("Práctica 1º CRUD", "<h1>Práctica 1º CRUD</h1><p>No he podido conectarse a la base de batos: " . $e->getMessage() . "</p>"));
             }
         }
-        $error_usuario = repetido_excluido($conexion, "usuarios", "usuario", $_POST["usuario"], $_POST["btnContMod"]);
+        $error_usuario = repetido_excluido($conexion, "usuarios", "usuario", $_POST["usuario"], $_POST["btnModCont"]);
 
         if (is_string($error_usuario))
             die($error_usuario);
@@ -67,18 +67,19 @@ if (isset($_POST["btnContMod"])) {
                 die(error_page("Práctica 1º CRUD", "<h1>Práctica 1º CRUD</h1><p>No he podido conectarse a la base de batos: " . $e->getMessage() . "</p>"));
             }
         }
-        $error_email = repetido_excluido($conexion, "usuarios", "email", $_POST["email"], $_POST["btnContMod"]);
+        $error_email = repetido_excluido($conexion, "usuarios", "email", $_POST["email"], $_POST["btnModCont"]);
 
         if (is_string($error_email))
             die($error_email);
     }
+
     $error_form = $error_nombre || $error_usuario || $error_clave || $error_email;
 
     if (!$error_form) {
 
         // Compruebo que no lo han borrado
         try {
-            $consulta = "select * from usuarios where id_usuario='" . $_POST["btnContMod"] . "'";
+            $consulta = "select * from usuarios where id_usuario='" . $_POST["btnModCont"] . "'";
             $resultado = mysqli_query($conexion, $consulta);
         } catch (Exception $e) {
             mysqli_close($conexion);
@@ -88,16 +89,15 @@ if (isset($_POST["btnContMod"])) {
         if (mysqli_num_rows($resultado) > 0) { // Si no lo han borrado
             // Modifico el usuario
             try {
-                $consulta = "update usuarios set 'nombre'=" . $_POST["nombre"] . ", 
-                            'usuario'=" . $_POST["usuario"] . ", 'clave'=" . md5($_POST["psw"]) . " 'email'=" . $_POST["email"] . "
-                            where id_usuario='" . $_POST["btnContMod"] . "'";
+                $consulta = "update usuarios set nombre='" . $_POST["nombre"] . "', 
+                            usuario='" . $_POST["usuario"] . "', clave='" . md5($_POST["psw"]) . "', email='" . $_POST["email"] . "'
+                            where id_usuario=" . $_POST["btnModCont"] . "";
                 $resultado = mysqli_query($conexion, $consulta);
             } catch (Exception $e) {
                 mysqli_close($conexion);
                 die(error_page("Práctica 1º CRUD", "<h1>Listado de los usuarios</h1><p>No ha podido conectarse a la base de batos: " . $e->getMessage() . "</p>"));
             }
         }
-        mysqli_free_result($resultado);
         mysqli_close($conexion);
         header("Location: index.php"); // Redirecciono para no modificar otra vez al refrescar
     }
@@ -137,6 +137,10 @@ if (isset($_POST["btnContMod"])) {
             cursor: pointer;
             color: blue;
             text-decoration: underline
+        }
+
+        .error {
+            color: red;
         }
     </style>
 </head>
@@ -205,13 +209,13 @@ if (isset($_POST["btnContMod"])) {
         echo "<p><button type='submit' name='btnContBorrar' value='" . $_POST["btnBorrar"] . "'>Continuar</button> ";
         echo "<button type='submit'>Atrás</button></p>";
         echo "</form>";
-    } else if (isset($_POST["btnEditar"]) || isset($error_form)) {
-
-        print "<h3>Editando al usuario " . $_POST["btnEditar"] . "</h3>";
+    } else if (isset($_POST["btnEditar"]) || isset($_POST["btnModCont"])) {
+        $id_actual = isset($_POST["btnEditar"]) ? $_POST["btnEditar"]:$_POST["btnModCont"];
+        print "<h3>Editando al usuario " . $id_actual . "</h3>";
 
 
         try {
-            $consulta = "select * from usuarios where id_usuario='" . $_POST["btnEditar"] . "'";
+            $consulta = "select * from usuarios where id_usuario='" . $id_actual . "'";
             $resultado = mysqli_query($conexion, $consulta);
         } catch (Exception $e) {
             mysqli_close($conexion);
@@ -228,7 +232,7 @@ if (isset($_POST["btnContMod"])) {
                     <label for="nombre">Nombre: </label>
                     <input type="text" name="nombre" id="nombre" value="<?php print $datos_usuario["nombre"] ?>">
                     <?php
-                    if (isset($error_form) && $error_nombre) {
+                    if (isset($_POST["btnModCont"]) && $error_nombre) {
                         if ($_POST["nombre"] == "") {
                             print "<span class='error'> * Campo vacío * </span>";
                         } else if (strlen($_POST["nombre"]) > 30) {
@@ -243,7 +247,7 @@ if (isset($_POST["btnContMod"])) {
                     <label for="usuario">Usuario: </label>
                     <input type="text" name="usuario" id="usuario" value="<?php print $datos_usuario["usuario"] ?>">
                     <?php
-                    if (isset($error_form) && $error_usuario) {
+                    if (isset($_POST["btnModCont"]) && $error_usuario) {
                         if ($_POST["usuario"] == "") {
                             print "<span class='error'> * Campo vacío * </span>";
                         } else if (strlen($_POST["usuario"]) > 20) {
@@ -259,7 +263,7 @@ if (isset($_POST["btnContMod"])) {
                     <label for="psw">Contraseña: </label>
                     <input type="password" name="psw" id="psw" placeholder="Editar contraseña">
                     <?php
-                    if (isset($error_form) && $error_clave) {
+                    if (isset($_POST["btnModCont"]) && $error_clave) {
                         print "<span class='error'> * El tamaño máximo del nombre es de 30 carácteres * </span>";
                     }
                     ?>
@@ -268,7 +272,7 @@ if (isset($_POST["btnContMod"])) {
                     <label for="email">Email: </label>
                     <input type="text" name="email" id="email" value="<?php print $datos_usuario["email"] ?>">
                     <?php
-                    if (isset($error_form) && $error_email) {
+                    if (isset($_POST["btnModCont"]) && $error_email) {
                         if ($_POST["email"] == "") {
                             print "<span class='error'> * Campo vacío * </span>";
                         } else if (strlen($_POST["email"]) > 20) {
@@ -280,7 +284,7 @@ if (isset($_POST["btnContMod"])) {
                     ?>
                 </p>
                 <p>
-                    <button type="submit" name="btnModCont" value="<?php print $_POST["btnEditar"] ?>">Continuar</button>
+                    <button type="submit" name="btnModCont" value="<?php print $id_actual ?>">Continuar</button>
                     <button type="submit">Atrás</button>
                 </p>
             </form>
