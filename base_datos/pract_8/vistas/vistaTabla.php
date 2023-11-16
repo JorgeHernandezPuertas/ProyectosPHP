@@ -27,7 +27,7 @@
         print "<tr>";
         print "<td>" . $fila["id_usuario"] . "</td><td><img src='Img/" . $fila["foto"] . "' ></td><td><form action='index.php' method='post' ><button type='submit' class='enlace' name='btnDetalle' value='" . $fila["id_usuario"] . "' >" . $fila["nombre"] . "</button></td>";
         print "<td><button type='submit' name='btnBorrar' value='" . $fila["id_usuario"] . "' class='enlace'>Borrar</button><input type='hidden' name='foto' value='".$fila["foto"]."' > - ";
-        print "<button type='submit' name='btnEditar' value='" . $fila["id_usuario"] . "' class='enlace'>Editar</button></form></td>";
+        print "<button type='submit' name='btnEditar' value='" . $fila["id_usuario"] . "' class='enlace'>Editar</button><input type='hidden' name='foto' value='".$fila["foto"]."' ></form></td>";
         print "</tr>";
     }
     print "</table>";

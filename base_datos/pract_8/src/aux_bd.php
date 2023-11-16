@@ -1,6 +1,8 @@
 <?php
 // Creo constantes con los valores necesarios para conectarme a la BD
-define("HOST", "localhost");
+// Host casa: '127.0.0.1:3310' , Host clase: 'localhost'
+define("HOST", "127.0.0.1:3310");
+// define("HOST", "localhost");
 define("USER", "jose");
 define("PWD", "josefa");
 define("BD", "bd_cv");
@@ -60,7 +62,7 @@ function repetido_excluido($conexion,$tabla,$columna,$valor, $id)
 {
 
     try{
-        $consulta="select * from ".$tabla." where ".$columna."='".$valor."' and id_usuario != $id";
+        $consulta="select * from $tabla where ".$columna."='".$valor."' and id_usuario != $id";
         $resultado=mysqli_query($conexion, $consulta);
         $respuesta=mysqli_num_rows($resultado)>0;
         mysqli_free_result($resultado);

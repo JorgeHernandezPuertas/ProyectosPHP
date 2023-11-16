@@ -9,8 +9,7 @@ if (isset($_POST["btnGuardarInsertar"])) {
         if (!isset($bd)) {
             $bd = conectarBD();
             if (is_string($bd)) {
-                error_page("Error conectando", "<h3>Error conectando a la BD: $bd</h3>");
-                exit();
+                die(error_page("Error conectando", "<h3>Error conectando a la BD: $bd</h3>"));
             }
         }
         $error_usuario = repetido($bd, "usuarios", "usuario", $_POST["usuario"]);
@@ -22,8 +21,7 @@ if (isset($_POST["btnGuardarInsertar"])) {
         if (!isset($bd)) {
             $bd = conectarBD();
             if (is_string($bd)) {
-                error_page("Error conectando", "<h3>Error conectando a la BD: $bd</h3>");
-                exit();
+                die(error_page("Error conectando", "<h3>Error conectando a la BD: $bd</h3>"));
             }
         }
         $error_dni = repetido($bd, "usuarios", "dni", $dni_mayus);
@@ -68,9 +66,53 @@ if (isset($_POST["btnGuardarInsertar"])) {
                 die(error_page("Error subiendo la imagen", "<h3>Ha ocurrido un error subiendo la imagen al servidor.</h3>"));
             }
         }
-
+        mysqli_close($bd);
         header("Location:index.php");
         exit();
+    }
+}
+
+// Compruebo el formulario de editar
+if (isset($_POST["btnGuardarMod"])){
+    $error_nombre = $_POST["nombre"] == "" || strlen($_POST["nombre"]) > 50;
+    $error_usuario = $_POST["usuario"] == "" || strlen($_POST["usuario"]) > 30;
+    if (!$error_usuario) {
+        if (!isset($bd)) {
+            $bd = conectarBD();
+            if (is_string($bd)) {
+                die(error_page("Error conectando", "<h3>Error conectando a la BD: $bd</h3>"));
+            }
+        }
+        $error_usuario = repetido_excluido($bd, "usuarios", "usuario", $_POST["usuario"], $_POST["btnGuardarMod"]);
+    }
+    $error_psw = $_POST["psw"] == "" || strlen($_POST["psw"]) > 15;
+    $dni_mayus = strtoupper($_POST["dni"]);
+    $error_dni = !preg_match("/^[0-9]{8}[A-Z]$/", $dni_mayus) || !(LetraNIF(substr($dni_mayus, 0, 8)) == substr($dni_mayus, -1));
+    if (!$error_dni) {
+        if (!isset($bd)) {
+            $bd = conectarBD();
+            if (is_string($bd)) {
+                die(error_page("Error conectando", "<h3>Error conectando a la BD: $bd</h3>"));
+            }
+        }
+        $error_dni = repetido_excluido($bd, "usuarios", "dni", $dni_mayus, $_POST["btnGuardarMod"]);
+    }
+
+    $error_foto = false;
+    if ($_FILES["foto"]["tmp_name"] != "") {
+        $error_foto = !getimagesize($_FILES["foto"]["tmp_name"]) || $_FILES["foto"]["size"] > 500 * 1024 || !explode(".", $_FILES["foto"]["name"]);
+    }
+
+    $error_form = $error_nombre || $error_usuario || $error_psw || $error_dni || $error_foto;
+
+    if (!$error_form) {
+        // Si tiene foto diferente la modifico
+        $ext = "";
+        if ($partes = explode(".", $_POST["foto"])) $ext = end($partes);
+        $nombre_foto = "foto_perfil".$_POST["btnGuardarMod"]."$ext";
+        if ($nombre_foto != $_POST["fotoAnt"]){
+            
+        }
     }
 }
 
@@ -121,7 +163,7 @@ if (isset($_POST["btnGuardarInsertar"])) {
         }
 
         .foto-perfil {
-            width: 200px;
+            width: 300px;
             height: auto;
         }
     </style>
@@ -136,6 +178,8 @@ if (isset($_POST["btnGuardarInsertar"])) {
         require "vistas/vistaDetalle.php";
     } else if (isset($_POST["btnBorrar"]) || isset($_POST["btnBorrarCont"])) {
         require "vistas/vistaBorrar.php";
+    } else if (isset($_POST["btnEditar"]) || isset($_POST["btnGuardarMod"])){
+        require "vistas/vistaModificar.php";
     }
     require "vistas/vistaTabla.php";
     ?>

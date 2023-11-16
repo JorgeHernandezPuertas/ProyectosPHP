@@ -33,5 +33,7 @@ if (isset($_POST["btnBorrar"])) {
         }
     }
     
+    print "<p>El usuario seleccionado ha sido borrado con éxito</p>";
+
 }
 ?>
