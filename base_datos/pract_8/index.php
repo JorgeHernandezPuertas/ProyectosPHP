@@ -72,6 +72,27 @@ if (isset($_POST["btnGuardarInsertar"])) {
     }
 }
 
+// Borro la foto si le han dado al botón
+if (isset($_POST["btnContBorrarFoto"])){
+    if (!isset($bd)){
+        $bd = conectarBD();
+        if (is_string($bd)){
+            die(error_page("Error conectando a la BD", "<p>$bd</p>"));
+        }
+    }
+    // Pongo la foto predeterminada
+    try {
+        $consulta = "update usuarios set foto='no_imagen.jpg' where id_usuario='".$_POST["id_usuario"]."'";
+        mysqli_query($bd, $consulta);
+    } catch (mysqli_sql_exception $e) {
+        mysqli_close($bd);
+        die(error_page("Error modificando", "<h3>Error modificando la foto del nuevo usuario a la BD: $e</h3>"));
+    }
+    // Si tiene éxito borro la foto del servidor
+    if (file_exists("Img/".$_POST["fotoAnt"]));
+        unlink("Img/".$_POST["fotoAnt"]);
+}
+
 // Compruebo el formulario de editar
 if (isset($_POST["btnGuardarMod"])){
     $error_nombre = $_POST["nombre"] == "" || strlen($_POST["nombre"]) > 50;
@@ -83,7 +104,7 @@ if (isset($_POST["btnGuardarMod"])){
                 die(error_page("Error conectando", "<h3>Error conectando a la BD: $bd</h3>"));
             }
         }
-        $error_usuario = repetido_excluido($bd, "usuarios", "usuario", $_POST["usuario"], $_POST["btnGuardarMod"]);
+        $error_usuario = repetido_excluido($bd, "usuarios", "usuario", $_POST["usuario"], $_POST["id_usuario"]);
     }
     $error_psw = $_POST["psw"] == "" || strlen($_POST["psw"]) > 15;
     $dni_mayus = strtoupper($_POST["dni"]);
@@ -95,7 +116,7 @@ if (isset($_POST["btnGuardarMod"])){
                 die(error_page("Error conectando", "<h3>Error conectando a la BD: $bd</h3>"));
             }
         }
-        $error_dni = repetido_excluido($bd, "usuarios", "dni", $dni_mayus, $_POST["btnGuardarMod"]);
+        $error_dni = repetido_excluido($bd, "usuarios", "dni", $dni_mayus, $_POST["id_usuario"]);
     }
 
     $error_foto = false;
@@ -135,6 +156,7 @@ if (isset($_POST["btnGuardarMod"])){
         table {
             border-collapse: collapse;
             text-align: center;
+            width: 80%;
         }
 
         td {
@@ -166,6 +188,13 @@ if (isset($_POST["btnGuardarMod"])){
             width: 300px;
             height: auto;
         }
+
+        form.paralelo {
+            display: flex;
+        }
+        body > * {
+            margin: 0 auto;
+        }
     </style>
 </head>
 
@@ -178,7 +207,7 @@ if (isset($_POST["btnGuardarMod"])){
         require "vistas/vistaDetalle.php";
     } else if (isset($_POST["btnBorrar"]) || isset($_POST["btnBorrarCont"])) {
         require "vistas/vistaBorrar.php";
-    } else if (isset($_POST["btnEditar"]) || isset($_POST["btnGuardarMod"])){
+    } else if (isset($_POST["btnEditar"]) || isset($_POST["btnGuardarMod"]) || isset($_POST["btnBorrarFoto"]) || isset($_POST["btnNoBorrarFoto"]) || isset($_POST["btnContBorrarFoto"])){
         require "vistas/vistaModificar.php";
     }
     require "vistas/vistaTabla.php";

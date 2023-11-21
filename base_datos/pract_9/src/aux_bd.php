@@ -5,7 +5,7 @@
 define("HOST", "localhost");
 define("USER", "jose");
 define("PWD", "josefa");
-define("BD", "bd_cv");
+define("BD", "bd_videoclub");
 
 function error_page($title, $body)
 {
