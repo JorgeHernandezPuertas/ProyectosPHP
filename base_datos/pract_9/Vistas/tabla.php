@@ -36,6 +36,5 @@
         print "</form></tr>";
     }
     mysqli_free_result($resultado);
-    mysqli_close($conexion);
     ?>
     </table>
