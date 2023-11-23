@@ -9,7 +9,8 @@ if(!isset($conexion)){
 try {
     $consulta = "delete from peliculas where idPelicula='".$_POST["btnBorrarCont"]."'";
     mysqli_query($conexion, $consulta);
-    unlink("Img/". $_POST["fotoAnt"]);
+    if ($_POST["fotoAnt"] != "no_imagen.jpg")
+        unlink("Img/". $_POST["fotoAnt"]);
 } catch (mysqli_sql_exception $e) {
     session_destroy();
     mysqli_close($conexion);
