@@ -1,38 +1,17 @@
 <?php
+session_name("pract9");
+session_start();
 require "src/aux_bd.php";
 
 // Compruebo el formulario de inserción
-if (isset($_POST["btnInsertarConf"])){
-    $error_titulo = $_POST["titulo"] == "" || strlen($_POST["titulo"]) > 15;
-    $error_director = $_POST["director"] == "" || strlen($_POST["director"]) > 20;
-    $error_sinopsis = $_POST["sinopsis"] == "";
-    $error_tematica = $_POST["tematica"] == "" || strlen($_POST["director"]) > 15;
-    $error_caratula = false;
-    if ($_FILES["caratula"]["name"] != ""){
-        $error_caratula = !getimagesize($_FILES["caratula"]["tmp_name"]) || !explode(".", $_FILES["caratula"]["name"]);
-    }
-    $error_form = $error_titulo || $error_director || $error_sinopsis || $error_tematica || $error_caratula;
-
-    // Cuando no haya error en el formulario inserto el usuario
-    if (!$error_form) {
-        // Inserto el usuario
-        if (!isset($conexion)){
-            $conexion = conectarBD();
-        if (is_string($conexion)) {
-            die(error_page("Ha ocurrido un error conectando a la BD", "<p>Ha ocurrido un error conectando a la BD: $conexion</p>"));
-        }
-        }
-        try {
-            $consulta = "insert into peliculas (titulo, director, sinopsis, tematica) values ('".$_POST["titulo"]."', '".$_POST["director"]."', '".$_POST["sinopsis"]."', '".$_POST["tematica"]."')";
-            mysqli_query($conexion, $consulta);
-        } catch (mysqli_sql_exception $e){
-            mysqli_close($conexion);
-            die(error_page("Ha ocurrido un error insertando a la BD", "<p>Ha ocurrido un error insertando a la BD: $e</p>"));
-        }
-        header("Location: index.php");
-        exit();
-    }
+if (isset($_POST["btnInsertarConf"])) {
+    require "func/func_insert.php";
 }
+
+if (isset($_POST["btnBorrarCont"])){
+    require "func/func_borrar.php";
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -42,31 +21,44 @@ if (isset($_POST["btnInsertarConf"])){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRUD videoclub - Práctica 9</title>
     <style>
-        table, th, td {
+        body {
+            padding-bottom: 5rem;
+        }
+
+        table,
+        th,
+        td {
             border-collapse: collapse;
             border: 1px solid black;
         }
+
         table {
             width: 80%;
             margin: 0 auto;
         }
-        th, td {
+
+        th,
+        td {
             padding: 2px 8px;
             text-align: center;
         }
+
         .enlace {
             background-color: white;
             border: none;
             color: blue;
             text-decoration: underline;
         }
+
         img {
             width: 100px;
             height: auto;
         }
+
         .perfil {
             width: 300px;
         }
+
         .error {
             color: red;
         }
@@ -80,14 +72,27 @@ if (isset($_POST["btnInsertarConf"])){
     // Pongo la tabla
     require "Vistas/tabla.php";
 
+    // Pongo los mensajes de sesión
+    if (isset($_SESSION["msg_ins"])) {
+        print $_SESSION["msg_ins"];
+        unset($_SESSION["msg_ins"]);
+    } else if (isset($_SESSION["msg_borrar"])){
+        print $_SESSION["msg_borrar"];
+        unset($_SESSION["msg_borrar"]);
+    }
+
     // Pongo las diferentes operaciones CRUD
-    if (isset($_POST["btnInsertar"]) || isset($_POST["btnInsertarConf"])){
+    if (isset($_POST["btnInsertar"]) || isset($_POST["btnInsertarConf"])) {
         require "Vistas/insertar.php";
+    } else if (isset($_POST["btnDetalles"])) {
+        require "Vistas/detalle.php";
+    } else if (isset($_POST["btnBorrar"])){
+        require "Vistas/borrar.php";
     }
 
     mysqli_close($conexion);
     ?>
-    
+
 </body>
 
 </html>
