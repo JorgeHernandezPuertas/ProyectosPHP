@@ -15,6 +15,7 @@ try {
 $n_rows = mysqli_num_rows($resultado);
 if (isset($resultado) && $n_rows > 0) {
     $tupla = mysqli_fetch_assoc($resultado);
+    mysqli_free_result($resultado);
 ?>
     <h4>Detalles de la película con id: <?php print $_POST["btnDetalles"] ?></h4>
     <p><strong>Título:</strong> <?php print $tupla["titulo"] ?></p>

@@ -3,13 +3,19 @@ session_name("pract9");
 session_start();
 require "src/aux_bd.php";
 
-// Compruebo el formulario de inserción
+// Inserción
 if (isset($_POST["btnInsertarConf"])) {
     require "func/func_insert.php";
 }
 
+// Borrado
 if (isset($_POST["btnBorrarCont"])){
     require "func/func_borrar.php";
+}
+
+// Modificación
+if (isset($_POST["btnEditar"])){
+    require "func/func_mod.php";
 }
 
 ?>
@@ -88,6 +94,8 @@ if (isset($_POST["btnBorrarCont"])){
         require "Vistas/detalle.php";
     } else if (isset($_POST["btnBorrar"])){
         require "Vistas/borrar.php";
+    } else if (isset($_POST["btnEditar"])){
+        require "Vistas/modificar.php";
     }
 
     mysqli_close($conexion);
