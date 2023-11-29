@@ -14,7 +14,7 @@ if (isset($_POST["btnBorrarCont"])){
 }
 
 // Modificación
-if (isset($_POST["btnEditar"])){
+if (isset($_POST["btnEditarCont"])){
     require "func/func_mod.php";
 }
 
@@ -94,7 +94,7 @@ if (isset($_POST["btnEditar"])){
         require "Vistas/detalle.php";
     } else if (isset($_POST["btnBorrar"])){
         require "Vistas/borrar.php";
-    } else if (isset($_POST["btnEditar"])){
+    } else if (isset($_POST["btnEditar"]) || isset($_POST["btnEditarCont"])){
         require "Vistas/modificar.php";
     }
 
