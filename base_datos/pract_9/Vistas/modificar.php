@@ -88,17 +88,23 @@ if ($n_rows > 0) { // Si no lo han borrado
             ?>
         </p>
         <input type="hidden" name="fotoAnt" value="<?php print $_POST["fotoAnt"] ?>">
-        <p id="car">
-        <p>Carátula Actual</p>
-        <img src="Img/<?php print $_POST["fotoAnt"] ?>" alt="Carátula de la película"><br>
-        <button name="eliminarCar" value="<?php print $id_pelicula ?>">Eliminar Carátula</button>
-        </p>
+        <div id="car">
+            <p>Carátula Actual</p>
+            <img src="Img/<?php print $_POST["fotoAnt"] ?>" alt="Carátula de la película"><br>
+            <?php
+            if ($_POST["fotoAnt"] != "no_imagen.jpg") {
+            ?>
+                <button name="eliminarCar" value="<?php print $id_pelicula ?>">Eliminar Carátula</button>
+            <?php
+            }
+            ?>
+
+        </div>
         <p>
             <button name="btnEditarCont" value="<?php print $id_pelicula ?>">Editar película</button> <button>Atrás</button>
         </p>
     </form>
 <?php
-print $_POST["fotoAnt"];
 } else {
     print "<p>La película seleccionada fue borrada.</p>";
 }

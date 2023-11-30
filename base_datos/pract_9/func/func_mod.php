@@ -68,6 +68,6 @@ if (isset($_POST["btnEditarCont"])) {
         $_SESSION["modificar"] = "<p>Se ha modifica la pelicula con id $id_pelicula con éxito</p>";
         mysqli_close($conexion);
         header("Location: index.php");
-
+        exit();
     }
 }
