@@ -28,32 +28,6 @@ if (isset($_POST["btnQuitar"])){ // Quito la clase de su horario a esa hora
     exit();
 }
 
-if (isset($_POST["btnAgregar"])){
-    if(!isset($conexion)){
-        $conexion = conectarBD();
-        if (is_string($conexion)){
-            session_destroy();
-            die(error_page("Error conectando a la BD", "<h2>Ha ocurrido un error conectando a la BD</h2><p>$conexion</p>"));
-        }
-    }
-
-    // Agrego a la BD
-    try {
-        $consulta = "insert into horario_lectivo (`usuario`, `dia`, `hora`, `grupo`) values (".$_POST["id_profesor"].", ".$_POST["dia"].", ".$_POST["hora"].",".$_POST["grupo"].")";
-        $resultado = mysqli_query($conexion, $consulta);
-    } catch (Exception $e){
-        session_destroy();
-        die(error_page("Error borrando en la BD", "<h2>Ha ocurrido un error borrando en la BD</h2><p>$e</p>"));
-    }
-
-    $_SESSION["id_profesor"] = $_POST["id_profesor"];
-    $_SESSION["dia"] = $_POST["dia"];
-    $_SESSION["hora"] = $_POST["hora"];
-    $_SESSION["mensaje"] = "Grupo insertado con éxito.";
-    header("Location: index.php");
-    exit();
-}
-
 
 ?>
 <!DOCTYPE html>
@@ -96,8 +70,8 @@ if (isset($_POST["btnAgregar"])){
         <?php
         if (isset($_POST["btnVer"])){
             $id_usuario = $_POST["profesor"];
-        } else if (isset($_POST["btnEditar"]) || isset($_SESSION["id_profesor"])) {
-            $id_usuario = $_SESSION["id_profesor"];
+        } else if (isset($_POST["btnEditar"])) {
+            $id_usuario = $_POST["btnEditar"];
         }
         // Me conecto a la BD si no estoy conectado
         if (!isset($conexion)) {
@@ -120,7 +94,7 @@ if (isset($_POST["btnAgregar"])){
         print "<p>Horario del Profesor:";
         print "<select name='profesor'>";
         while ($tupla = mysqli_fetch_assoc($resultado)) {
-            if (isset($_POST["btnVer"]) || isset($_POST["btnEditar"]) && $tupla["id_usuario"] == $id_usuario){
+            if ((isset($_POST["btnVer"]) || isset($_POST["btnEditar"])) && $tupla["id_usuario"] == $id_usuario){
                 print "<option selected value='" . $tupla["id_usuario"] . "'>" . $tupla["nombre"] . "</option>";
                 $_SESSION["profesor"] = $tupla["nombre"];
             } else {
