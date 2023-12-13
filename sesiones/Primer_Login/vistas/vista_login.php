@@ -87,7 +87,7 @@ if(isset($_POST["btnLogin"]))
             ?>
         </p>
         <p>
-            <button type="submit" name="btnLogin">Login</button>
+            <button type="submit" name="btnLogin">Login</button> <button type="submit" name="btnRegistrar">Registrarse</button>
         </p>
     </form>
     <?php
