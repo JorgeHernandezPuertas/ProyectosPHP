@@ -29,7 +29,6 @@ if (mysqli_num_rows($resultado) <= 0) {
 // Aprovecho y me quedo con todos los datos del usuario logeado
 $datos_usuario_logeado = mysqli_fetch_assoc($resultado);
 mysqli_free_result($resultado);
-mysqli_close($conexion);
 
 
 // Control de inactividad

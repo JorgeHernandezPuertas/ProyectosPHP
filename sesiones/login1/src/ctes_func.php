@@ -8,7 +8,7 @@ define("PWD", "josefa");
 define("BD", "bd_foro2");
 
 // Defino el tiempo máximo (60 segundos en este caso)
-define("TIEMPO_MAX", 60);
+define("TIEMPO_MAX", 3600);
 
 function error_page($title, $body)
 {
