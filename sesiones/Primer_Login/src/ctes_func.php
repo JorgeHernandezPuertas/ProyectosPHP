@@ -41,4 +41,15 @@ function repetido($conexion,$tabla,$columna,$valor,$columna_clave=null,$valor_cl
     }
     return $respuesta;
 }
+
+function conectarBD()
+{
+    try {
+        $bd = mysqli_connect(SERVIDOR_BD, USUARIO_BD, CLAVE_BD, NOMBRE_BD);
+        mysqli_set_charset($bd, "utf8");
+    } catch (mysqli_sql_exception $e) {
+        return $e->getMessage();
+    }
+    return $bd;
+}
 ?>
