@@ -162,7 +162,7 @@ if (isset($_POST["btnAgregar"])) {
     <form action="gest_libros.php" method='post' enctype="multipart/form-data">
         <p>
             <label for="ref">Referencia: </label>
-            <input type="text" name="ref" id="ref" value='<?php if (isset($_POST["btnAgregar"])) print $_POST["red"] ?>'>
+            <input type="text" name="ref" id="ref" value='<?php if (isset($_POST["btnAgregar"])) print $_POST["ref"] ?>'>
             <?php
             if (isset($_POST["btnAgregar"]) && $error_ref){
                 if ($_POST["ref"] == ""){
