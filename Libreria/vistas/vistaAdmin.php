@@ -159,7 +159,7 @@ if (isset($_POST["btnAgregar"])) {
     mysqli_free_result($resultado);
     ?>
     <h3>Agregar un nuevo libro</h3>
-    <form action="gest_libros.php" method='post'>
+    <form action="gest_libros.php" method='post' enctype="multipart/form-data">
         <p>
             <label for="ref">Referencia: </label>
             <input type="text" name="ref" id="ref" value='<?php if (isset($_POST["btnAgregar"])) print $_POST["red"] ?>'>
