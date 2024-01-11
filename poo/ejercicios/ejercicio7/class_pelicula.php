@@ -97,6 +97,7 @@ class Pelicula {
 
         if ($fecha_actual > $this->fecha_prev_devolucion){
             $dif_dias = $fecha_actual->diff($this->fecha_prev_devolucion);
+            $recargo = intval($dif_dias->format("%a")) * $this->recargo;
         }
 
         return $recargo;
