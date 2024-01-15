@@ -3,21 +3,21 @@ require "src/ctes_funciones.php";
 
 if (isset($_POST["btnContBorrar"])) {
     try {
-        $conexion = mysqli_connect("localhost", "jose", "josefa", "bd_foro");
-        mysqli_set_charset($conexion, "utf8");
-    } catch (Exception $e) {
+        $conexion = new PDO("mysql:host=" . HOST . ";dbname=" . BD . ";", USUARIO_BD, CLAVE_BD, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+    } catch (PDOException $e) {
         die(error_page("Práctica 1º CRUD", "<h1>Listado de los usuarios</h1><p>No ha podido conectarse a la base de batos: " . $e->getMessage() . "</p>"));
     }
 
     try {
-        $consulta = "delete from usuarios where id_usuario='" . $_POST["btnContBorrar"] . "'";
-        mysqli_query($conexion, $consulta);
+        $consulta = "delete from usuarios where id_usuario=?";
+        $sentencia = $conexion->prepare($consulta);
+        $sentencia->execute([$_POST["btnContBorrar"]]);
     } catch (Exception $e) {
-        mysqli_close($conexion);
+        $conexion = null;
         die(error_page("Práctica 1º CRUD", "<h1>Listado de los usuarios</h1><p>No ha podido conectarse a la base de batos: " . $e->getMessage() . "</p>"));
     }
 
-    mysqli_close($conexion);
+    $conexion = null;
     header("Location:index.php");
     exit();
 }
@@ -27,32 +27,30 @@ if (isset($_POST["btnModCont"])) {
     $error_nombre = $_POST["nombre"] == "" || strlen($_POST["nombre"]) > 30;
     if (!$error_nombre) {
         try {
-            $conexion = mysqli_connect("localhost", "jose", "josefa", "bd_foro");
-            mysqli_set_charset($conexion, "utf8");
-        } catch (Exception $e) {
+            $conexion = new PDO("mysql:host=" . HOST . ";dbname=" . BD . ";", USUARIO_BD, CLAVE_BD, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+        } catch (PDOException $e) {
             die(error_page("Práctica 1º CRUD", "<h1>Práctica 1º CRUD</h1><p>No he podido conectarse a la base de batos: " . $e->getMessage() . "</p>"));
         }
 
         $error_nombre = repetido_excluido($conexion, "usuarios", "nombre", $_POST["nombre"], $_POST["btnModCont"]);
 
         if (is_string($error_nombre))
-            die($error_nombre);
+            die(error_page("Práctica 1º CRUD", "<h1>Práctica 1º CRUD</h1><p>No he podido buscar en la base de batos: " . $e->getMessage() . "</p>"));
     }
 
     $error_usuario = $_POST["usuario"] == "" || strlen($_POST["nombre"]) > 20;
     if (!$error_usuario) {
         if (!isset($conexion)) {
             try {
-                $conexion = mysqli_connect("localhost", "jose", "josefa", "bd_foro");
-                mysqli_set_charset($conexion, "utf8");
-            } catch (Exception $e) {
+                $conexion = new PDO("mysql:host=" . HOST . ";dbname=" . BD . ";", USUARIO_BD, CLAVE_BD, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+            } catch (PDOException $e) {
                 die(error_page("Práctica 1º CRUD", "<h1>Práctica 1º CRUD</h1><p>No he podido conectarse a la base de batos: " . $e->getMessage() . "</p>"));
             }
         }
         $error_usuario = repetido_excluido($conexion, "usuarios", "usuario", $_POST["usuario"], $_POST["btnModCont"]);
 
         if (is_string($error_usuario))
-            die($error_usuario);
+            die(error_page("Práctica 1º CRUD", "<h1>Práctica 1º CRUD</h1><p>No he podido buscar en la base de batos: " . $e->getMessage() . "</p>"));
     }
 
     $error_clave = strlen($_POST["psw"]) > 15;
@@ -61,8 +59,7 @@ if (isset($_POST["btnModCont"])) {
     if (!$error_email) {
         if (!isset($conexion)) {
             try {
-                $conexion = mysqli_connect("localhost", "jose", "josefa", "bd_foro");
-                mysqli_set_charset($conexion, "utf8");
+                $conexion = new PDO("mysql:host=" . HOST . ";dbname=" . BD . ";", USUARIO_BD, CLAVE_BD, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
             } catch (Exception $e) {
                 die(error_page("Práctica 1º CRUD", "<h1>Práctica 1º CRUD</h1><p>No he podido conectarse a la base de batos: " . $e->getMessage() . "</p>"));
             }
@@ -70,7 +67,7 @@ if (isset($_POST["btnModCont"])) {
         $error_email = repetido_excluido($conexion, "usuarios", "email", $_POST["email"], $_POST["btnModCont"]);
 
         if (is_string($error_email))
-            die($error_email);
+            die(error_page("Práctica 1º CRUD", "<h1>Práctica 1º CRUD</h1><p>No he podido conectarse a la base de batos: " . $e->getMessage() . "</p>"));
     }
 
     $error_form = $error_nombre || $error_usuario || $error_clave || $error_email;
@@ -79,27 +76,34 @@ if (isset($_POST["btnModCont"])) {
 
         // Compruebo que no lo han borrado
         try {
-            $consulta = "select * from usuarios where id_usuario='" . $_POST["btnModCont"] . "'";
-            $resultado = mysqli_query($conexion, $consulta);
-        } catch (Exception $e) {
-            mysqli_close($conexion);
+            $consulta = "select * from usuarios where id_usuario = ?";
+            $sentencia = $conexion->prepare($consulta);
+            $resultado = $sentencia->execute([$_POST["btnModCont"]]);
+        } catch (PDOException $e) {
+            $conexion = null;
             die(error_page("Práctica 1º CRUD", "<h1>Listado de los usuarios</h1><p>No ha podido conectarse a la base de batos: " . $e->getMessage() . "</p>"));
         }
 
-        if (mysqli_num_rows($resultado) > 0) { // Si no lo han borrado
+        if ($sentencia->rowCount() > 0) { // Si no lo han borrado
+
             // Modifico el usuario
             try {
-                $consulta = "update usuarios set nombre='" . $_POST["nombre"] . "', 
-                            usuario='" . $_POST["usuario"] . "', clave='" . md5($_POST["psw"]) . "', email='" . $_POST["email"] . "'
-                            where id_usuario=" . $_POST["btnModCont"] . "";
-                $resultado = mysqli_query($conexion, $consulta);
-            } catch (Exception $e) {
-                mysqli_close($conexion);
+                $consulta = "update usuarios set nombre= ?, 
+                usuario= ?, clave= ?, email= ?
+                where id_usuario= ?";
+                $sentencia = $conexion->prepare($consulta);
+                $datos = [$_POST["nombre"], $_POST["usuario"], md5($_POST["psw"]), $_POST["email"], $_POST["btnModCont"]];
+                $resultado = $sentencia->execute($datos);
+            } catch (PDOException $e) {
+                $resultado = null;
+                $conexion = null;
                 die(error_page("Práctica 1º CRUD", "<h1>Listado de los usuarios</h1><p>No ha podido conectarse a la base de batos: " . $e->getMessage() . "</p>"));
             }
         }
-        mysqli_close($conexion);
+        $resultado = null;
+        $conexion = null;
         header("Location: index.php"); // Redirecciono para no modificar otra vez al refrescar
+        exit();
     }
 }
 
@@ -210,7 +214,7 @@ if (isset($_POST["btnModCont"])) {
         echo "<button type='submit'>Atrás</button></p>";
         echo "</form>";
     } else if (isset($_POST["btnEditar"]) || isset($_POST["btnModCont"])) {
-        $id_actual = isset($_POST["btnEditar"]) ? $_POST["btnEditar"]:$_POST["btnModCont"];
+        $id_actual = isset($_POST["btnEditar"]) ? $_POST["btnEditar"] : $_POST["btnModCont"];
         print "<h3>Editando al usuario " . $id_actual . "</h3>";
 
 
