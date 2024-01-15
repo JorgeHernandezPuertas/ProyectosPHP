@@ -1,5 +1,24 @@
 <?php
+session_name("Paginacion_primer_crud_PDO");
+session_start();
+
 require "src/ctes_funciones.php";
+
+if (!isset($_SESSION["n_reg_mostrar"])){
+    $_SESSION["n_reg_mostrar"] = 3;
+}
+
+$_SESSION["pag"] = 1;
+
+if (isset($_POST["pagina"])){
+    $_SESSION["pag"] = $_POST["pagina"];
+}
+
+if (isset($_POST["btnMostrarRegistros"])){
+    $_SESSION["n_reg_mostrar"] = $_POST["num_mostrar"];
+}
+
+$ini_limit = ($_SESSION["pag"] - 1) * $_SESSION["n_reg_mostrar"];
 
 if (isset($_POST["btnContBorrar"])) {
     try {
@@ -9,6 +28,7 @@ if (isset($_POST["btnContBorrar"])) {
     }
 
     try {
+        
         $consulta = "delete from usuarios where id_usuario=?";
         $sentencia = $conexion->prepare($consulta);
         $sentencia->execute([$_POST["btnContBorrar"]]);
@@ -124,7 +144,8 @@ if (isset($_POST["btnModCont"])) {
 
         table {
             border-collapse: collapse;
-            text-align: center
+            text-align: center;
+            margin-top:1rem;
         }
 
         th {
@@ -146,6 +167,20 @@ if (isset($_POST["btnModCont"])) {
         .error {
             color: red;
         }
+
+        p {
+            
+            padding: 1rem 0;
+        }
+
+        p button {
+            margin-right: 1rem;
+        }
+
+        * {
+            margin:0 auto;
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -161,13 +196,33 @@ if (isset($_POST["btnModCont"])) {
         }
     }
 
-    try {
+    // Consulto el numero de registros
+    try{
         $consulta = "select * from usuarios";
+        $num_registros = mysqli_num_rows(mysqli_query($conexion, $consulta));
+    } catch (Exception $e){
+        mysqli_close($conexion);
+        die("<p>No se ha podido realizar la consulta: " . $e->getMessage() . "</p></body></html>");
+    }
+
+    try {
+        $consulta = "select * from usuarios limit $ini_limit, ".$_SESSION["n_reg_mostrar"]."";
         $resultado = mysqli_query($conexion, $consulta);
     } catch (Exception $e) {
         mysqli_close($conexion);
         die("<p>No se ha podido realizar la consulta: " . $e->getMessage() . "</p></body></html>");
     }
+
+    // Pongo las opciones de paginacion
+    print "<form action='index.php' method='post' >";
+    print "<label for='num_mostrar'>Seleccionar registros a visualizar: </label>";
+    print "<select id='num_mostrar' name='num_mostrar'>";
+    print "<option value='3' >3</option>";
+    print "<option value='6' ".(isset($_POST["btnMostrarRegistros"]) && $_SESSION["n_reg_mostrar"] == 6 ? "selected":"" ) ." >6</option>";
+    print "<option value='$num_registros' ".(isset($_POST["btnMostrarRegistros"]) && $_SESSION["n_reg_mostrar"] == $num_registros ? "selected":"" ) ." >todos</option>";
+    print "</select>";
+    print "<button name='btnMostrarRegistros'>Seleccionar</button>";
+    print "</form>";
 
     echo "<table>";
     echo "<tr><th>Nombre de Usuario</th><th>Borrar</th><th>Editar</th></tr>";
@@ -179,6 +234,30 @@ if (isset($_POST["btnModCont"])) {
         echo "</tr>";
     }
     echo "</table>";
+
+    // Después de la tabla ponemos los botones de paginación
+    $n_paginas = ceil($num_registros / $_SESSION["n_reg_mostrar"]);
+    if ($n_paginas > 1){
+        print "<form method='post' action='index.php' ><p>";
+
+        if (1 <> $_SESSION["pag"]){
+            print "<button name='pagina' value='1' > |<< </button>";
+            print "<button name='pagina' value='".($_SESSION["pag"] - 1)."' > < </button>";
+        }
+
+        for ($i=1; $i <= $n_paginas; $i++) { 
+            print "<button name='pagina' value='$i' >$i</button>";
+        }
+
+        if ($n_paginas <> $_SESSION["pag"]){
+            print "<button name='pagina' value='".($_SESSION["pag"] + 1)."' > > </button>";
+            print "<button name='pagina' value='$n_paginas' > >>| </button>";
+        }
+
+        print "</p></form>";
+    }
+    
+
     mysqli_free_result($resultado);
 
     if (isset($_POST["btnDetalle"])) {
