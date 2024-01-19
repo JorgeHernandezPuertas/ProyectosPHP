@@ -1,15 +1,9 @@
 <?php
-
-// viki' or 1=1 or'1'='1
-// poniendo eso se puede entrar sin la constraseña (poniendo el usuario que quieras)
-// hace que te devueklva todos los usuarios, el primero es varo que no es admin por lo que entra a normal
-
 session_name("examen3_23_24");
 session_start();
 
 // variables y funciones error_page y repetido
 require "src/funct_ctes.php";
-
 
 if (isset($_POST["btnSalir"])) {
     session_destroy();

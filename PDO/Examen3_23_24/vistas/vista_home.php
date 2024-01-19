@@ -1,7 +1,4 @@
 <?php
-// En esta parte no estoy logueado
-
-
 // si le das al boton de entrar para iniciar sesión
 if (isset($_POST["btnEntrar"])) {
 
@@ -60,6 +57,22 @@ if (isset($_POST["btnEntrar"])) {
     }
 }
 
+// Hago la paginación y las imágenes que ver
+if (!isset($_SESSION["longitud"])) {
+    $_SESSION["longitud"] = 3;
+}
+if (isset($_POST["btnNum"])) {
+    $_SESSION["longitud"] = intval($_POST["num"]);
+    $_SESSION["pagina"] = 1;
+}
+
+if (!isset($_SESSION["pagina"])) {
+    $_SESSION["pagina"] = 1;
+}
+
+if (isset($_POST["pagina"])) {
+    $_SESSION["pagina"] = $_POST["pagina"];
+}
 
 ?>
 <!DOCTYPE html>
@@ -80,6 +93,15 @@ if (isset($_POST["btnEntrar"])) {
             margin-top: 2.5%;
             margin-left: 2.5%;
             float: left
+        }
+
+        div {
+            overflow: hidden;
+        }
+
+        form.paginas {
+            margin-top: 2rem;
+            text-align: center;
         }
 
         .error {
