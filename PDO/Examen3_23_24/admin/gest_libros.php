@@ -21,9 +21,8 @@ if (isset($_SESSION["usuario"])) {
 
     // hace una conexion nueva ya que no esta en el index           (se abre aqui y se usa en la vista)
     try {
-        $conexion = mysqli_connect(SERVIDOR_BD, USUARIO_BD, CLAVE_BD, NOMBRE_BD);
-        mysqli_set_charset($conexion, "utf8");
-    } catch (Exception $e) {
+        $conexion = new PDO("mysql:host=" . SERVIDOR_BD . ";dbname=" . NOMBRE_BD, USUARIO_BD, CLAVE_BD, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+    } catch (PDOException $e) {
         session_destroy();
         die(error_page("Examen3 Curso 23-24", "<h1>Librería</h1><p>No he podido conectarse a la base de batos: " . $e->getMessage() . "</p>"));
     }

@@ -14,16 +14,18 @@ if (isset($_POST["btnEntrar"])) {
     if (!$error_form) {
         // hace una consulta filtrando por el nombre y la contraseña
         try {
-            $consulta = "select * from usuarios where lector='" . $_POST["usuario"] . "' and clave='" . md5($_POST["clave"]) . "'";
-            $resultado = mysqli_query($conexion, $consulta);
-        } catch (Exception $e) {
+            $consulta = "select * from usuarios where lector=? and clave=?";
+            $sentencia = $conexion->prepare($consulta);
+            $datos = array($_POST["usuario"], md5($_POST["clave"]));
+            $sentencia->execute($datos);
+        } catch (PDOException $e) {
             session_destroy();
-            mysqli_close($conexion);
+            unset($conexion);
             die(error_page("Examen3 Curso 23-24", "<h1>Librería</h1><p>No se ha podido realizar la consulta: " . $e->getMessage() . "</p>"));
         }
 
         // si hay mas de 0 tuplas (hay un usuario con ese nombre y esa contraseña)
-        if (mysqli_num_rows($resultado) > 0) {
+        if ($sentencia->rowCount() > 0) {
             // ---- crea las sesiones ----
             // la de usuario con el nombre del lector
             $_SESSION["usuario"] = $_POST["usuario"];
@@ -32,10 +34,10 @@ if (isset($_POST["btnEntrar"])) {
             // y la de la ultima acción
             $_SESSION["ultima_accion"] = time();
             // guarda los datos del usuario
-            $datos_usu_log = mysqli_fetch_assoc($resultado);
-            mysqli_free_result($resultado);
+            $datos_usu_log = $sentencia->fetch(PDO::FETCH_ASSOC);
+            unset($resultado);
             // cierra pq va ha cambiar de pagina con el header
-            mysqli_close($conexion);
+            unset($conexion);
 
             // dependiendo del tipo te manda a un sitio diferente
             // mas qki
@@ -54,7 +56,7 @@ if (isset($_POST["btnEntrar"])) {
             $error_usuario = true;
         }
 
-        mysqli_free_result($resultado);
+        unset($resultado);
     }
 }
 
