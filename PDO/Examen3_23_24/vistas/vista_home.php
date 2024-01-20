@@ -104,12 +104,22 @@ if (isset($_POST["pagina"])) {
             text-align: center;
         }
 
+        form#pre-fotos {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 2rem;
+        }
+
         .error {
             color: red;
         }
 
         .mensaje {
             color: blue;
+        }
+
+        p#sin-libros {
+            text-align: center;
         }
     </style>
 </head>
