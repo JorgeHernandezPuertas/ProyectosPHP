@@ -9,6 +9,8 @@
 
 
 <body>
+  <h2>Página inicial de la API</h2>
+  <p>Para usar la API de la tienda usa la URL: 'http://localhost/Proyectos/servicios_web/ejercicios/ejercicio1/servicios_rest'</p>
   <?php
   define("DIR_SERV", "http://localhost/Proyectos/servicios_web/ejercicios/ejercicio1/servicios_rest");
 
@@ -24,27 +26,40 @@
     curl_close($llamada);
     return $respuesta;
   }
-  $datos = array("cod" => "YYYYYZY", "nombre" => "producto a borrar", "nombre_corto" => "producto a borrar", "descripcion" => "descripcion a borrar", "PVP" => 25.5, "familia" => "MP3");
-  $url = DIR_SERV . "/producto/insertar";
+  // $datos = array("cod" => "YYYYYYY", "nombre" => "producto a borrar", "nombre_corto" => "producto a borrar", "descripcion" => "descripcion a borrar", "PVP" => 25.5, "familia" => "MP3");
+  $url = DIR_SERV . "/productos";
 
-  $respuesta = consumir_servicios_REST($url, "post", $datos);
+  $respuesta = consumir_servicios_REST($url, "get");
   $obj = json_decode($respuesta);
-  if ($obj) {
+  if (!$obj) {
     die("<p>Error consumiendo el servicio: " . $url . "</p>" . $respuesta);
   }
   if (isset($obj->mensaje_error)) {
     die("<p>Error consumiendo el servicio: " . $url . "</p>" . $obj->mensaje_error);
   }
-  print "<p>El json de respuesta al insertar es: <br/> $respuesta</p>"
+
+  print "<table>";
+  print "<tr><th>Cod</th><th>Nombre Corto</th></tr>";
+  foreach ($obj->productos as $tupla) {
+    print "<tr><td>" . $tupla->cod . "</td><td>" . $tupla->nombre_corto . "</td></tr>";
+  }
+  print "</table>";
+
+  $url = DIR_SERV . "/productos/3DSNG";
+
+  $respuesta = consumir_servicios_REST($url, "get");
+
+  $obj = json_decode($respuesta);
+  if (!$obj) {
+    die("<p>Error consumiendo el servicio: " . $url . "</p>" . $respuesta);
+  }
+  if (isset($obj->mensaje_error)) {
+    die("<p>Error consumiendo el servicio: " . $url . "</p>" . $obj->mensaje_error);
+  }
+
+  print "<h2>Objeto recuperado en soltiario</h2>";
+  print "<p>cod: " . $obj->producto[0]->cod . " ; nombre_corto: " . $obj->producto[0]->nombre_corto . "</p>";
   ?>
-  <h2>Página inicial de la API</h2>
-  <p>Para usar la API de la tienda usa la URL: 'http://localhost/Proyectos/servicios_web/ejercicios/ejercicio1/servicios_rest'</p>
-  <p>'/productos' -> devuelve todos los productos</p>
-
-  <p>'/producto/{codigo}' -> devuelve el producto con ese código</p>
-  <p>'/producto/insertar' -> Formulario para insertar el producto</p>
-
-
 </body>
 
 </html>
