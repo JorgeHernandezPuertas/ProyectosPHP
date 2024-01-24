@@ -20,8 +20,8 @@ $app->post("/producto/insertar", function ($req) {
     print json_encode(insertarProducto($datos));
 });
 
-$app->put("/producto/actualizar/{id}", function ($req) {
-    $datos = array($req->getParam("nombre"), $req->getParam("nombre_corto"), $req->getParam("descripcion"), $req->getParam("PVP"), $req->getParam("familia"), $req->getAttribute("id"));
+$app->put("/producto/actualizar/{cod}", function ($req) {
+    $datos = array($req->getParam("nombre"), $req->getParam("nombre_corto"), $req->getParam("descripcion"), $req->getParam("PVP"), $req->getParam("familia"), $req->getAttribute("cod"));
     print json_encode(actualizarProducto($datos));
 });
 

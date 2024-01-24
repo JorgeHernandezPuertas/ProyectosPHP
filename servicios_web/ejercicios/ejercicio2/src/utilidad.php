@@ -44,7 +44,7 @@ function comprobarCodRepetido($cod)
 
 function comprobarRepetido($tabla, $col, $valor, $col_cod = "cod", $val_cod = "sin_codigo")
 {
-  $url = DIR_SERV . "/repetido/$tabla/$col/$valor/$col_cod/$val_cod";
+  $url = DIR_SERV . "/repetido/$tabla/$col/" . urlencode($valor) . "/$col_cod/" . urlencode($val_cod);
   $respuesta = consumir_servicios_REST($url, "get");
   $obj = json_decode($respuesta);
   if (!$obj) die(error_page("Error en el servicio", "<p>Ha ocurrido un error comprobando si se repite el cod por parte del servicio: $url</p>"));

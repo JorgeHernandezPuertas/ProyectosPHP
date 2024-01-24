@@ -33,6 +33,41 @@ if (isset($_POST["btnContInsertar"])) {
   }
 }
 
+if (isset($_POST["btnContEditar"])) {
+  // Compruebo que no hay error en el codigo
+  $error_nombre = $_POST["nom"] != "" && strlen($_POST["nom"]) > 200;
+  $error_nom_cor = $_POST["nomCor"] == "" || strlen($_POST["nomCor"]) > 50 || comprobarRepetido("producto", "nombre_corto", $_POST["nomCor"], "cod", $_POST["btnContEditar"]);
+  $error_descripcion = $_POST["desc"] != "" && strlen($_POST["desc"]) > 500;
+  $error_pvp = $_POST["pvp"] == "" || !is_numeric($_POST["pvp"]) || !preg_match("/^\d{1,8}(.\d{1,2})?$/", $_POST["pvp"]);
+  $error_form = $error_nombre || $error_nom_cor || $error_pvp;
+
+  if (!$error_form) {
+    // Si no hay error en el formulario inserto los datos y redirijo al index para borrar el post
+    $url = DIR_SERV . "/producto/actualizar/" . $_POST["btnContEditar"];
+    $datos = array("nombre" => $_POST["nom"], "nombre_corto" => $_POST["nomCor"], "descripcion" => $_POST["desc"], "PVP" => $_POST["pvp"], "familia" => $_POST["fam"]);
+    $respuesta = consumir_servicios_REST($url, "put", $datos);
+    $obj = json_decode($respuesta);
+    if (!$obj) die(error_page("Error en el servicio", "<p>Ha ocurrido un error insertando el producto por parte del servicio: $url</p>"));
+    if (isset($obj->mensaje_error)) die(error_page("Error en el servicio", "<p>Ha ocurrido un error insertando el producto por parte del servicio: $url</p>"));
+    // Si llega aqui es que se ha insertado con éxito por lo que pongo el mensaje en un session y redirijo
+    $_SESSION["mensaje"] = $obj->mensaje;
+    header("Location:index.php");
+    exit;
+  }
+}
+
+if (isset($_POST["btnContBorrar"])) {
+  $url = DIR_SERV . "/producto/borrar/" . $_POST["btnContBorrar"];
+  $respuesta = consumir_servicios_REST($url, "delete");
+  $obj = json_decode($respuesta);
+  if (!$obj) die(error_page("Error en el servicio", "<p>Ha ocurrido un error borrando el producto por parte del servicio: $url</p>"));
+  if (isset($obj->mensaje_error)) die(error_page("Error en el servicio", "<p>Ha ocurrido un error borrando el producto por parte del servicio: $url</p>"));
+
+  $_SESSION["mensaje"] = $obj->mensaje;
+  header("Location: index.php");
+  exit;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -101,6 +136,12 @@ if (isset($_POST["btnContInsertar"])) {
   }
   if (isset($_POST["btnInsertar"]) || isset($_POST["btnContInsertar"])) {
     require './vistas/vistaInsertar.php';
+  } else if (isset($_POST["btnEditar"]) || isset($_POST["btnContEditar"])) {
+    require "./vistas/vistaEditar.php";
+  } else if (isset($_POST['btnBorrar'])) {
+    require './vistas/vistaBorrar.php';
+  } else if (isset($_POST["btnDetalle"])) {
+    require './vistas/vistaDetalle.php';
   }
 
   require './vistas/vistaTabla.php';

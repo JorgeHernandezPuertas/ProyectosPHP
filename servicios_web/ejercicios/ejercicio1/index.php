@@ -58,7 +58,7 @@
   }
 
   print "<h2>Objeto recuperado en soltiario</h2>";
-  print "<p>cod: " . $obj->producto[0]->cod . " ; nombre_corto: " . $obj->producto[0]->nombre_corto . "</p>";
+  print "<p>cod: " . $obj->producto->cod . " ; nombre_corto: " . $obj->producto->nombre_corto . "</p>";
   ?>
 </body>
 

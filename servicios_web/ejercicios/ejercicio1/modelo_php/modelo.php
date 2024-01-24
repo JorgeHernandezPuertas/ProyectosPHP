@@ -71,7 +71,7 @@ function getProductoById($id)
     return array("mensaje_error" => "Ha ocurrido un error en el servidor buscando en la BD: " . $e->getMessage());
   }
 
-  $respuesta = array("producto" => $sentencia->fetchAll(PDO::FETCH_ASSOC));
+  $respuesta = array("producto" => $sentencia->fetch(PDO::FETCH_ASSOC));
   $conexion = null;
   $sentencia = null;
   return $respuesta;
