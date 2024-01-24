@@ -1,3 +1,21 @@
+<?php
+
+if (isset($_POST["btnVolver"])) {
+  header("Location: index.php");
+  exit;
+}
+
+require "./src/utilidad.php";
+
+if (isset($_POST["btnContInsertar"])) {
+  // Compruebo que no hay error en el codigo
+  $error_cod = $_POST["cod"] == "" || strlen($_POST["cod"]) > 12 || comprobarCodRepetido($_POST["cod"]);
+  $error_nombre = $_POST["nom"] != "" || strlen($_POST["nom"]) > 200;
+  $error_nom_cor = $_POST["nomCor"] == "" || strlen($_POST["nomCor"]) > 50 || comprobarRepetido("producto", "nombre_corto", $_POST["nomCor"]);
+  $error_form = $error_cod;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -5,38 +23,57 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRUD Tienda - Actividad 2</title>
+  <style>
+    table,
+    td,
+    th {
+      text-align: center;
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+
+    table {
+      width: 60%;
+      margin: 0 auto;
+    }
+
+    td,
+    th {
+      padding: .5rem;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    div {
+      width: 60%;
+      margin: 0 auto;
+      padding-bottom: 1rem;
+    }
+
+    .enlace {
+      background: inherit;
+      border: none;
+      color: blue;
+      cursor: pointer;
+      text-decoration: underline;
+
+      &:hover {
+        color: purple;
+      }
+    }
+  </style>
 </head>
 
 <body>
-  <h2>Productos</h2>
+  <h2>Listado de los Productos</h2>
   <?php
-  define("DIR_SERV", "http://localhost/Proyectos/servicios_web/ejercicios/ejercicio1/servicios_rest");
-
-  function consumir_servicios_REST($url, $metodo, $datos = null)
-  {
-    $llamada = curl_init();
-    curl_setopt($llamada, CURLOPT_URL, $url);
-    curl_setopt($llamada, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($llamada, CURLOPT_CUSTOMREQUEST, $metodo);
-    if (isset($datos))
-      curl_setopt($llamada, CURLOPT_POSTFIELDS, http_build_query($datos));
-    $respuesta = curl_exec($llamada);
-    curl_close($llamada);
-    return $respuesta;
-  }
-  // Recupero todos los productos
-  $url = DIR_SERV . "/productos";
-  $respuesta = consumir_servicios_REST($url, "get");
-  $obj = json_decode($respuesta);
-  if (!$obj) {
-    die("<p>Ha ocurrido un error recuperando los productos por parte del servicio: $url</p></body></html>");
-  } else if (isset($obj->mensaje_error)) {
-    die("<p>Ha ocurrido un error recuperando los productos por parte del servicio: $url <br/> Error: " . $obj->mensaje_error . "</p></body></html>");
+  if (isset($_POST["btnInsertar"]) || isset($_POST["btnContInsertar"])) {
+    require './vistas/vistaInsertar.php';
   }
 
-  print "<table>";
-  print "<tr></tr>";
-  print "</table>";
+  require './vistas/vistaTabla.php';
   ?>
 
 </body>
