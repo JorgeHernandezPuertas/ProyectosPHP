@@ -4,36 +4,84 @@ $respuesta = consumir_servicios_REST($url, "get");
 $obj = json_decode($respuesta);
 if (!$obj) die("<p>Ha ocurrido un error recuperando las familias por parte del servicio: $url</p></body></html>");
 if (isset($obj->mensaje_error)) die("<p>Ha ocurrido un error recuperando los productos por parte del servicio: $url <br/> Error: " . $obj->mensaje_error . "</p></body></html>");
-
-print "<div><form action='index.php' method='post' >";
-print "<h3>Creando un Producto</h3>";
-print "<p>";
-print "<label for='cod'>Código: </label>";
-print "<input name='cod' id='cod' type='text' />";
-print "</p>";
-print "<p>";
-print "<label for='nom'>Nombre: </label>";
-print "<input name='nom' id='nom' type='text' />";
-print "</p>";
-print "<p>";
-print "<label for='nomCor'>Nombre corto: </label>";
-print "<input name='nomCor' id='nomCor' type='text' />";
-print "</p>";
-print "<p>";
-print "<label for='desc'>Descripcion: </label>";
-print "<textarea name='desc' id='desc'></textarea>";
-print "</p>";
-print "<p>";
-print "<label for='pvp'>PVP: </label>";
-print "<input name='pvp' id='pvp' type='text' />";
-print "</p>";
-print "<p>";
-print "<label for='fam'>Seleccione una familia: </label>";
-print "<select name='name' id='name'>";
-foreach ($obj->familias as $tupla) {
-  print "<option value='" . $tupla->cod . "'>" . $tupla->nombre . "</option>";
-}
-print "</select>";
-print "</p>";
-print "<button name='btnVolver'>Volver</button> <button name='btnContInsertar'>Continuar</button>";
-print "</form></div>";
+?>
+<div>
+  <form action='index.php' method='post'>
+    <h3>Creando un Producto</h3>
+    <p>
+      <label for='cod'>Código: </label>
+      <input name='cod' id='cod' type='text' value="<?php if (isset($_POST["btnContInsertar"])) print $_POST["cod"] ?>" />
+      <?php
+      if (isset($_POST["btnContInsertar"]) && $error_cod) {
+        if ($_POST["cod"] == "") {
+          print "<span class='error'> * Campo vacío * </span>";
+        } else if (strlen($_POST["cod"]) > 12) {
+          print "<span class='error'> * El código introducido supera el máximo de carácteres (12) * </span>";
+        } else {
+          print "<span class='error'> * El código introducido ya está en uso en la BD  * </span>";
+        }
+      }
+      ?>
+    </p>
+    <p>
+      <label for='nom'>Nombre: </label>
+      <input name='nom' id='nom' type='text' value="<?php if (isset($_POST["btnContInsertar"])) print $_POST["nom"] ?>" />
+      <?php
+      if (isset($_POST["btnContInsertar"]) && $error_nombre) {
+        print "<span class='error'> * El nombre introducido supera el máximo de carácteres (200) * </span>";
+      }
+      ?>
+    </p>
+    <p>
+      <label for='nomCor'>Nombre corto: </label>
+      <input name='nomCor' id='nomCor' type='text' value="<?php if (isset($_POST["btnContInsertar"])) print $_POST["nomCor"] ?>" />
+      <?php
+      if (isset($_POST["btnContInsertar"]) && $error_nom_cor) {
+        if ($_POST["nomCor"] == "") {
+          print "<span class='error'> * Campo vacío * </span>";
+        } else if (strlen($_POST["nomCor"]) > 50) {
+          print "<span class='error'> * El nombre corto introducido supera el máximo de carácteres (50) * </span>";
+        } else {
+          print "<span class='error'> * El nombre corto introducido ya está en uso en la BD  * </span>";
+        }
+      }
+      ?>
+    </p>
+    <p>
+      <label for='desc'>Descripcion: </label>
+      <textarea name='desc' id='desc'><?php if (isset($_POST["btnContInsertar"])) print $_POST["desc"] ?></textarea>
+      <?php
+      if (isset($_POST["btnContInsertar"]) && $error_descripcion) {
+        print "<span class='error'> * La descripción introducida supera el máximo de carácteres (500) * </span>";
+      }
+      ?>
+    </p>
+    <p>
+      <label for='pvp'>PVP: </label>
+      <input name='pvp' id='pvp' type='text' value="<?php if (isset($_POST["btnContInsertar"])) print $_POST["pvp"] ?>" />
+      <?php
+      if (isset($_POST["btnContInsertar"]) && $error_pvp) {
+        if ($_POST["pvp"] == "") {
+          print "<span class='error'> * Campo vacío * </span>";
+        } else if (!is_numeric($_POST["pvp"])) {
+          print "<span class='error'> * El PVP introducido no es un número * </span>";
+        } else {
+          print "<span class='error'> * El  PVP introducido no cumple el formato correcto (decimal(10,2)) * </span>";
+        }
+      }
+      ?>
+    </p>
+    <p>
+      <label for='fam'>Seleccione una familia: </label>
+      <select name='fam' id='fam'>
+        <?php
+        foreach ($obj->familias as $tupla) {
+          $option = isset($_POST["btnContInsertar"]) && $_POST["fam"] == $tupla->cod ? "<option selected value='" . $tupla->cod . "'>" . $tupla->nombre . "</option>" : "<option value='" . $tupla->cod . "'>" . $tupla->nombre . "</option>";
+          print $option;
+        }
+        ?>
+      </select>
+    </p>
+    <button name='btnVolver'>Volver</button> <button name='btnContInsertar'>Continuar</button>
+  </form>
+</div>
