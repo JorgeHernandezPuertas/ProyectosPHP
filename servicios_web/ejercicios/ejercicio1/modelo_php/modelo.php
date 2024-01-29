@@ -1,6 +1,6 @@
 <?php
 // host clase: localhost | host casa: localhost:3310
-define("HOST", "localhost:3310");
+define("HOST", "localhost");
 define("USER", "jose");
 define("PSW", "josefa");
 define("DB_NAME", "bd_tienda");
