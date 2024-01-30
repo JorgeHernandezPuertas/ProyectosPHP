@@ -42,7 +42,7 @@ function comprobarCodRepetido($cod)
   return $obj->repetido;
 }
 
-function comprobarRepetido($tabla, $col, $valor, $col_cod = "cod", $val_cod = "sin_codigo")
+function comprobarRepetido($tabla, $col, $valor, $col_cod = null, $val_cod = null)
 {
   $url = DIR_SERV . "/repetido/$tabla/$col/" . urlencode($valor) . "/$col_cod/" . urlencode($val_cod);
   $respuesta = consumir_servicios_REST($url, "get");
