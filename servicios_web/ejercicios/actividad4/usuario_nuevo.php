@@ -107,9 +107,6 @@ if (isset($_POST["btnNuevoUsuario"]) || isset($_POST["btnContinuar"])) {
                 <button type="submit" name="btnVolver" id="boton-volver">Volver</button>
             </p>
         </form>
-        <?php
-
-        ?>
     </body>
 
     </html>
