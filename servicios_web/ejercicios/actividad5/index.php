@@ -4,7 +4,20 @@ session_start();
 require "utils.php";
 
 if (isset($_SESSION["usuario"])) {
-    require './vistas/logeado.php';
+    if (isset($_POST["btnSalir"])) {
+        $datos = array("api_key");
+        consumir_servicios_REST(DIR_SERV . "/salir", "post", $datos);
+        session_destroy();
+        header("Location:index.php");
+        exit;
+    }
+
+    require "./src/seguridad.php";
+
+    if ($datos_usuario->tipo === "admin")
+        require './vistas/admin.php';
+    else
+        require './vistas/normal.php';
 } else {
     require './vistas/login.php';
 }
