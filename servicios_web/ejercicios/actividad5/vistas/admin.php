@@ -1,6 +1,7 @@
 <?php
 if (isset($_POST["btnContBorrar"])) {
-  $obj = json_decode(consumir_servicios_REST(DIR_SERV . "/borrarUsuario/" . $_POST["btnContBorrar"], "delete"));
+  $datos = array("api_key" => $_SESSION["api_key"]);
+  $obj = json_decode(consumir_servicios_REST(DIR_SERV . "/borrarUsuario/" . $_POST["btnContBorrar"], "delete", $datos));
   if (!$obj) {
     die(error_page("Primer CRUD con SW", "<h2>Error consumiendo el servicio web</h2>"));
   } else if (isset($obj->error)) {
@@ -15,10 +16,10 @@ if (isset($_POST["btnContEditar"])) {
     || $_POST["email"] == "" ||  strlen($_POST["email"]) > 50 || !filter_var($_POST["email"], FILTER_VALIDATE_EMAIL);
 
   if (!$error_form)
-    $error_form = comprobarRepetido("usuarios", "usuario", $_POST["usuario"], "id_usuario", $_POST["btnContEditar"]) || comprobarRepetido("usuarios", "email", $_POST["email"], "id_usuario", $_POST["btnContEditar"]);
+    $error_form = comprobarRepetido("usuarios", "usuario", $_POST["usuario"], "id_usuario", $_POST["btnContEditar"], $_SESSION["api_key"]) || comprobarRepetido("usuarios", "email", $_POST["email"], "id_usuario", $_POST["btnContEditar"], $_SESSION["api_key"]);
 
   if (!$error_form) {
-    $datos = array("nombre" => $_POST["nombre"], "usuario" => $_POST["usuario"], "clave" => md5($_POST["psw"]), "email" => $_POST["email"]);
+    $datos = array("nombre" => $_POST["nombre"], "usuario" => $_POST["usuario"], "clave" => md5($_POST["psw"]), "email" => $_POST["email"], "api_key" => $_SESSION["api_key"]);
     $obj = json_decode(consumir_servicios_REST(DIR_SERV . "/actualizarUsuario/" . $_POST["btnContEditar"], "put", $datos));
     if (!$obj) {
       die(error_page("Primer CRUD con SW", "<h2>Error consumiendo el servicio web</h2>"));
@@ -63,13 +64,18 @@ if (isset($_POST["btnContEditar"])) {
       color: blue;
       text-decoration: underline;
     }
+
+    form {
+      display: inline;
+    }
   </style>
 </head>
 
 <body>
   <h1>Listado de los usuarios</h1>
   <?php
-  $obj = json_decode(consumir_servicios_REST(DIR_SERV . "/usuarios", "get"));
+  $datos = array("api_key" => $_SESSION["api_key"]);
+  $obj = json_decode(consumir_servicios_REST(DIR_SERV . "/usuarios", "get", $datos));
   if (!$obj) {
     die("<h2>Error consumiendo el servicio web</h2></body></html>");
   } else if (isset($obj->error)) {
@@ -108,10 +114,10 @@ if (isset($_POST["btnContEditar"])) {
 
   if (isset($_POST["btnDetalle"])) {
     // Código para listar detalles
-
     print "<h3>Detalles del usuario con id: " . $_POST["btnDetalle"] . "</h3>";
 
-    $obj = json_decode(consumir_servicios_REST(DIR_SERV . "/usuario/" . $_POST["btnDetalle"], "get"));
+    $datos = array("api_key" => $_SESSION["api_key"]);
+    $obj = json_decode(consumir_servicios_REST(DIR_SERV . "/usuario/" . $_POST["btnDetalle"], "get", $datos));
     if (!$obj) {
       die(error_page("Primer CRUD con SW", "<h2>Error consumiendo el servicio web</h2>"));
     } else if (isset($obj->error)) {
@@ -211,11 +217,12 @@ if (isset($_POST["btnContEditar"])) {
   <?php
   } else {
   ?>
-    <form action="usuario_nuevo.php" method="post">
-      <p>
-        <button name="btnNuevoUsuario" id="boton-enviar" type="submit">Insertar nuevo usuario</button>
-      </p>
-    </form>
+
+    <p>
+    <form action="usuario_nuevo.php" method="post"><button name="btnNuevoUsuario" id="boton-enviar" type="submit">Insertar nuevo usuario</button></form>
+    <form method="post" action="index.php"><button name="btnSalir">Salir</button></form>
+    </p>
+
   <?php
   }
   ?>

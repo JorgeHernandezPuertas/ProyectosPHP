@@ -33,17 +33,17 @@ function error_page($title, $body)
     return $page;
 }
 
-function comprobarCodRepetido($cod)
+function comprobarCodRepetido($cod, $api_key)
 {
     $url = DIR_SERV . "/repetido/producto/cod/" . $cod;
-    $respuesta = consumir_servicios_REST($url, "get");
+    $respuesta = consumir_servicios_REST($url, "get", array("api_key" => $api_key));
     $obj = json_decode($respuesta);
     if (!$obj) die(error_page("Error en el servicio", "<p>Ha ocurrido un error comprobando si se repite el cod por parte del servicio: $url</p>"));
     if (isset($obj->mensaje_error)) die(error_page("Error en el servicio", "<p>Ha ocurrido un error comprobando si se repite el cod por parte del servicio: $url</p>"));
     return $obj->repetido;
 }
 
-function comprobarRepetido($tabla, $col, $valor, $col_cod = null, $val_cod = null)
+function comprobarRepetido($tabla, $col, $valor, $col_cod = null, $val_cod = null, $api_key)
 {
     if ($col_cod) {
         $url = DIR_SERV . "/repetido/$tabla/$col/" . urlencode($valor) . "/$col_cod/" . urlencode($val_cod);
@@ -51,7 +51,7 @@ function comprobarRepetido($tabla, $col, $valor, $col_cod = null, $val_cod = nul
         $url = DIR_SERV . "/repetido/$tabla/$col/" . urlencode($valor);
     }
 
-    $respuesta = consumir_servicios_REST($url, "get");
+    $respuesta = consumir_servicios_REST($url, "get", array("api_key" => $api_key));
     $obj = json_decode($respuesta);
     if (!$obj) die(error_page("Error en el servicio", "<p>Ha ocurrido un error comprobando si se repite el cod por parte del servicio: $url</p>"));
     if (isset($obj->mensaje_error)) die(error_page("Error en el servicio", "<p>Ha ocurrido un error comprobando si se repite el cod por parte del servicio: $url</p>"));

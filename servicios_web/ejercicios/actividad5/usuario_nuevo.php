@@ -12,10 +12,10 @@ if (isset($_POST["btnNuevoUsuario"]) || isset($_POST["btnContinuar"])) {
             || $_POST["email"] == "" ||  strlen($_POST["email"]) > 50 || !filter_var($_POST["email"], FILTER_VALIDATE_EMAIL);
 
         if (!$error_form)
-            $error_form = comprobarRepetido("usuarios", "usuario", $_POST["usuario"]) || comprobarRepetido("usuarios", "email", $_POST["email"]);
+            $error_form = comprobarRepetido("usuarios", "usuario", $_POST["usuario"], "id_usuario", "no", $_SESSION["api_key"]) || comprobarRepetido("usuarios", "email", $_POST["email"], "id_usuario", "no", $_SESSION["api_key"]);
 
         if (!$error_form) {
-            $datos = array("nombre" => $_POST["nombre"], "usuario" => $_POST["usuario"], "clave" => md5($_POST["psw"]), "email" => $_POST["email"]);
+            $datos = array("nombre" => $_POST["nombre"], "usuario" => $_POST["usuario"], "clave" => md5($_POST["psw"]), "email" => $_POST["email"], "api_key" => $_SESSION["api_key"]);
             $obj = json_decode(consumir_servicios_REST(DIR_SERV . "/crearUsuario", "post", $datos));
             if (!$obj) {
                 die(error_page("Primer CRUD con SW", "<h2>Error consumiendo el servicio web</h2>"));

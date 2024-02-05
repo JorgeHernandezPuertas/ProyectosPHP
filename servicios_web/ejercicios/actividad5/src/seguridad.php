@@ -3,6 +3,7 @@ $datos["api_key"] = $_SESSION["api_key"];
 $url = DIR_SERV . "/logueado";
 $respuesta = consumir_servicios_REST($url, "POST", $datos);
 $obj = json_decode($respuesta);
+
 if (!$obj) {
   session_destroy();
   die(error_page("App Login SW", "<h1>App Login SW</h1>" . $respuesta));
