@@ -1,6 +1,7 @@
 <?php
 require "config_bd.php";
 
+// a)
 function comprobarLogin($lector, $clave)
 {
     try {
@@ -42,6 +43,7 @@ function comprobarLogin($lector, $clave)
     return $respuesta;
 }
 
+// b)
 function logueado($lector, $clave)
 {
     try {
@@ -70,4 +72,112 @@ function logueado($lector, $clave)
     unset($conexion);
     unset($sentencia);
     return $respuesta;
+}
+
+// d)
+function obtenerLibros()
+{
+    try {
+        $conexion = new PDO("mysql:host=" . SERVIDOR_BD . ";dbname=" . NOMBRE_BD, USUARIO_BD, CLAVE_BD, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+    } catch (PDOException $e) {
+        $respuesta["error"] = "Imposible conectar:" . $e->getMessage();
+        return $respuesta;
+    }
+
+    try {
+        $consulta = "select * from libros";
+        $sentencia = $conexion->prepare($consulta);
+        $sentencia->execute();
+    } catch (PDOException $e) {
+        unset($conexion);
+        return array("error" => "Error buscando en la BD: " . $e->getMessage());
+    }
+
+    $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+
+    unset($conexion);
+    unset($sentencia);
+
+    return array("libros" => $resultado);
+}
+
+// e)
+function crearLibro($datos)
+{
+    try {
+        $conexion = new PDO("mysql:host=" . SERVIDOR_BD . ";dbname=" . NOMBRE_BD, USUARIO_BD, CLAVE_BD, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+    } catch (PDOException $e) {
+        $respuesta["error"] = "Imposible conectar:" . $e->getMessage();
+        return $respuesta;
+    }
+
+    try {
+        $consulta = "insert into libros (referencia, titulo, autor, descripcion, precio, email) values (?, ?, ?, ?, ?, ?)";
+        $sentencia = $conexion->prepare($consulta);
+        $sentencia->execute($datos);
+    } catch (PDOException $e) {
+        unset($conexion);
+        return array("error" => "Error insertando en la BD: " . $e->getMessage());
+    }
+
+    unset($conexion);
+    unset($sentencia);
+
+    return array("mensaje" => "Libro insertado correctamente en la BD");
+}
+
+// f)
+function actualizarPortada($referencia, $portada)
+{
+    try {
+        $conexion = new PDO("mysql:host=" . SERVIDOR_BD . ";dbname=" . NOMBRE_BD, USUARIO_BD, CLAVE_BD, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+    } catch (PDOException $e) {
+        $respuesta["error"] = "Imposible conectar:" . $e->getMessage();
+        return $respuesta;
+    }
+
+    try {
+        $consulta = "update libros set portada = ? where referencia = ?";
+        $sentencia = $conexion->prepare($consulta);
+        $sentencia->execute([$portada, $referencia]);
+    } catch (PDOException $e) {
+        unset($conexion);
+        return array("error" => "Error insertando en la BD: " . $e->getMessage());
+    }
+
+    unset($conexion);
+    unset($sentencia);
+
+    return array("mensaje" => "Portada cambiada correctamente en la BD");
+}
+
+// g)
+function comprobarRepetido($tabla, $columna, $valor)
+{
+    try {
+        $conexion = new PDO("mysql:host=" . SERVIDOR_BD . ";dbname=" . NOMBRE_BD, USUARIO_BD, CLAVE_BD, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+    } catch (PDOException $e) {
+        $respuesta["error"] = "Imposible conectar:" . $e->getMessage();
+        return $respuesta;
+    }
+
+    try {
+        $consulta = "select $columna from $tabla where $columna = ?";
+        $sentencia = $conexion->prepare($consulta);
+        $sentencia->execute([$valor]);
+    } catch (PDOException $e) {
+        unset($conexion);
+        return array("error" => "Error insertando en la BD: " . $e->getMessage());
+    }
+
+    if ($sentencia->rowCount() > 0) {
+        $repetido = true;
+    } else {
+        $repetido = false;
+    }
+
+    unset($conexion);
+    unset($sentencia);
+
+    return array("repetido" => $repetido);
 }
