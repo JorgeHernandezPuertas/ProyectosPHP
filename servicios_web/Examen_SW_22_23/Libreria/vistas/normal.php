@@ -37,7 +37,7 @@
 
 <body>
   <h1>Librería</h1>
-  <p>Bienvenido <?php print $_SESSION["usuario"] ?> - <button class="enlace">Salir</button></p>
+  <form method="post" action="index.php">Bienvenido <?php print $_SESSION["lector"] ?> - <button class="enlace" name="btnSalir">Salir</button></form>
   <?php
   require "./vistas/listadoLibros.php";
   ?>

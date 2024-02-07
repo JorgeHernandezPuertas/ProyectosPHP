@@ -30,9 +30,9 @@ function comprobarLogin($lector, $clave)
         session_name("prueba-examen-sw-2022-2023");
         session_start();
         $api_session = session_id();
-        $_SESSION["lector"] = $usuario->lector;
-        $_SESSION["clave"] = $usuario->clave;
-        $_SESSION["tipo"] = $usuario->tipo;
+        $_SESSION["lector"] = $usuario["lector"];
+        $_SESSION["clave"] = $usuario["clave"];
+        $_SESSION["tipo"] = $usuario["tipo"];
 
         // Pongo el formato de respuesta que me pide
         $respuesta = array("usuario" => $usuario, "api_session" => $api_session);

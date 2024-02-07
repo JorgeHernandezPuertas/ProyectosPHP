@@ -7,16 +7,17 @@ $app = new \Slim\App;
 
 // a)
 $app->post("/login", function ($req) {
-    print json_encode($req->getParam("lector"), $req->getParam("clave"));
+    print json_encode(comprobarLogin($req->getParam("lector"), $req->getParam("clave")));
 });
 
 // b)
-$app->get("logueado", function ($req) {
+$app->get("/logueado", function ($req) {
     session_id($req->getParam("api_session"));
     session_start();
     if (isset($_SESSION["lector"])) {
         print json_encode(logueado($_SESSION["lector"], $_SESSION["clave"]));
     } else {
+        session_destroy();
         print json_encode(array("no_auth" => "No tienes permisos para usar este servicio"));
     }
 });
@@ -48,6 +49,7 @@ $app->post("/crearLibro", function ($req) {
         );
         print json_encode(crearLibro($datos));
     } else {
+        session_destroy();
         print json_encode(array("no_auth" => "No tienes permisos para usar este servicio"));
     }
 });
@@ -62,8 +64,17 @@ $app->put("/actualizarPortada/{referencia}", function ($req) {
         $portada = $req->getParam("portada");
         print json_encode(actualizarPortada($referencia, $portada));
     } else {
+        session_destroy();
         print json_encode(array("no_auth" => "No tienes permisos para usar este servicio"));
     }
+});
+
+// g)
+$app->get("/repetido/{tabla}/{columna}/{valor}", function ($req) {
+    $tabla = $req->getAttribute("tabla");
+    $columna = $req->getAttribute("columna");
+    $valor = $req->getAttribute("valor");
+    print json_encode(comprobarRepetido($tabla, $columna, $valor));
 });
 
 // Una vez creado servicios los pongo a disposición

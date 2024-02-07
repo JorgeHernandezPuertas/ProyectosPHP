@@ -1,6 +1,6 @@
 <?php
-define("DIR_SERV", "http://localhost/Proyectos/servicios_web/Examen_SW_22_23/servicios_rest/");
-define("MINS", 2);
+define("DIR_SERV", "http://localhost/Proyectos/servicios_web/Examen_SW_22_23/servicios_rest");
+define("MINUTOS", 2);
 
 
 function consumir_servicios_REST($url, $metodo, $datos = null)
@@ -24,7 +24,7 @@ function error_page($title, $body)
   return $html;
 }
 
-function repetido($tabla, $columna, $valor)
+function comprobarRepetido($tabla, $columna, $valor)
 {
   $url = DIR_SERV . "/repetido/" . urlencode($tabla) . "/" . urlencode($columna) . "/" . urlencode($valor);
   $obj = json_decode(consumir_servicios_REST($url, "get"));

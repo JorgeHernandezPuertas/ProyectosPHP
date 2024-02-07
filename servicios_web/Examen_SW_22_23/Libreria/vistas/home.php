@@ -1,14 +1,30 @@
 <?php
 if (isset($_POST["btnLogin"])) {
-  $error_usuario = $_POST["lector"] === "" || strlen($_POST["lector"] > 15) || !repetido("usuarios", "lector", $_POST["lector"]);
-  $error_psw = $_POST["psw"] === "" || strlen($_POST["psw"] > 20) || !repetido("usuarios", "clave", md5($_POST["psw"]));
+  $error_usuario = $_POST["lector"] === "" || strlen($_POST["lector"]) > 15;
+  $error_psw = $_POST["psw"] === "" || strlen($_POST["psw"]) > 20;
   $error_form = $error_usuario || $error_psw;
 
   if (!$error_form) {
-    $_SESSION["usuario"] = $_POST["lector"];
-    $_SESSION["clave"] = $_POST["psw"];
-    header("Location: index.php");
-    exit;
+    $url = DIR_SERV . "/login";
+    $datos = array("lector" => $_POST["lector"], "clave" => md5($_POST["psw"]));
+    $resultado = consumir_servicios_REST($url, "post", $datos);
+    $obj = json_decode($resultado);
+    if (!$obj) {
+      session_destroy();
+      die(error_page("Error consumiendo el servicio web", "<h2>Error consumiendo el servicio web</h2><p>$url</p>"));
+    } else if (isset($obj->mensaje)) {
+      $error_usuario = true;
+    }
+
+    if (isset($obj->usuario)) {
+      $_SESSION["lector"] = $obj->usuario->lector;
+      $_SESSION["clave"] = $obj->usuario->clave;
+      $_SESSION["tipo"] = $obj->usuario->tipo;
+      $_SESSION["api_session"] = $obj->api_session;
+      $_SESSION["ult_accion"] = time();
+      header("Location: index.php");
+      exit;
+    }
   }
 }
 ?>
