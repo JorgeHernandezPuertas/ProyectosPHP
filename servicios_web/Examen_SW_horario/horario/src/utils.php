@@ -1,6 +1,6 @@
 <?php
 define("DIR_SERV", "http://localhost/Proyectos/servicios_web/Examen_SW_horario/servicios_rest");
-define("MINUTOS", 2);
+define("MINUTOS", 10);
 
 
 function consumir_servicios_REST($url, $metodo, $datos = null)
@@ -35,4 +35,16 @@ function comprobarRepetido($tabla, $columna, $valor)
   }
 
   return $obj->repetido;
+}
+
+function obtenerClases($hora, $dia, $horario)
+{
+  $clases = "";
+  foreach ($horario as $indice => $tupla) {
+    if ($tupla->dia === $dia && $tupla->hora === $hora) {
+      $clases .= $tupla->nombre . "/";
+    }
+  }
+  $clases = substr($clases, 0, strlen($clases) - 1);
+  return $clases;
 }
