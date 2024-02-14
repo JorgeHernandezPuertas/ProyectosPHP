@@ -1,16 +1,29 @@
+<?php
+// Obtengo los datos del horario de ese profesor
+$url = DIR_SERV . "/obtenerHorario/" . $datos_usuario_log->id_usuario;
+$datos = array("api_session" => $_SESSION["api_session"]);
+$obj = json_decode(consumir_servicios_REST($url, "get", $datos));
+if (!$obj) {
+  session_destroy();
+  die(error_page("Error consumiendo el servicio", "<p>En la url: $url</p>"));
+} else if (isset($obj->error)) {
+  session_destroy();
+  die(error_page("Error consumiendo el servicio", "<p>Error: $obj->error</p>"));
+} else if (isset($obj->no_auth)) {
+  session_unset();
+  $_SESSION["seguridad"] = "La sesión de la API ha caducado.";
+  header("Location: index.php");
+  exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Página inicio</title>
+  <title>Normal - Práctica examen 2</title>
   <style>
-    img {
-      width: 100%;
-      height: auto;
-    }
-
     .enlace {
       color: blue;
       text-decoration: underline;
@@ -48,15 +61,7 @@
     </button>
   </form>
   <?php
-  // Obtengo los datos del horario de ese profesor
-  $url = DIR_SERV . "/obtenerHorario/" . $datos_usuario_log->id_usuario;
-  $datos = array("api_session" => $_SESSION["api_session"]);
-  $obj = json_decode(consumir_servicios_REST($url, "get", $datos));
-  if (!$obj) {
-    die("<p>Error consumiendo el servicio en la url: $url</p></body></html>");
-  } else if (isset($obj->error)) {
-    die("<p>Error consumiendo el servicio: $obj->error</p></body></html>");
-  }
+
 
   $horario = $obj->horario;
 

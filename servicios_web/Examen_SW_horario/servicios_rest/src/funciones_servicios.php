@@ -75,8 +75,6 @@ function obtenerProfesores()
         return array("error" => $e->getMessage());
     }
 
-    if ($sentencia->rowCount() === 0) return array("mensaje" => "No hay profesores en la BD actualmente");
-
     $profesores = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 
     return array("profesores" => $profesores);
