@@ -192,6 +192,33 @@ function getAllFamilias()
   return $respuesta;
 }
 
+function getFamilia($cod)
+{
+  try {
+    $conexion = new PDO("mysql:host=" . HOST . ";dbname=" . DB_NAME, USER, PSW, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+  } catch (PDOException $e) {
+    $conexion = null;
+    $mensaje_error = "Ha ocurrido un error en el servidor conectando a la BD: " . $e->getMessage();
+    return array("mensaje_error" => $mensaje_error);
+  }
+
+  // Hago la búsqueda
+  try {
+    $consulta = "select * from familia where cod = ?";
+    $sentencia = $conexion->prepare($consulta);
+    $sentencia->execute([$cod]);
+  } catch (PDOException $e) { // Si hay error lo devuelvo en un array asociativo
+    $conexion = null;
+    $sentencia = null;
+    return array("mensaje_error" => "Ha ocurrido un error en el servidor buscando en la BD: " . $e->getMessage());
+  }
+
+  $respuesta = array("familia" => $sentencia->fetch(PDO::FETCH_ASSOC));
+  $conexion = null;
+  $sentencia = null;
+  return $respuesta;
+}
+
 function buscar_repetido($tabla, $col, $valor)
 {
   try {

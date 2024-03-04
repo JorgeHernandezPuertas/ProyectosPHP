@@ -33,6 +33,11 @@ $app->get("/familias", function () {
     print json_encode(getAllFamilias());
 });
 
+$app->get("/familia/{cod}", function ($req) {
+    $cod = $req->getAttribute("cod");
+    print json_encode(getFamilia($cod));
+});
+
 $app->get("/repetido/{tabla}/{columna}/{valor}", function ($req) {
     $tabla = $req->getAttribute("tabla");
     $col = $req->getAttribute("columna");
