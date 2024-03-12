@@ -30,10 +30,6 @@ function obtener_productos () {
   })
 }
 
-function editarProducto (cod) {
-
-}
-
 function eliminarProducto (cod) {
   resetHtml()
   $.ajax({
