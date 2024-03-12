@@ -304,6 +304,7 @@ async function editarProducto (event) {
 
 function resetHtml () {
   $('#acciones').html('')
+  $('#errores').html('')
 }
 
 $(document).ready(function () {
